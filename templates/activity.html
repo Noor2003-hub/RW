@@ -1,0 +1,160 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Activity
+{% endblock %}
+{% block main %}
+    <div dir="ltr">
+        <a href="/home" class="btn btn-primary" style="float: left; margin-left:5%">العودة 🏠︎</a>
+    </div>
+
+    <table style="width:100%">
+        <tr>
+            <td style="width:20%">
+                {% if n %}
+                    <form method="POST" action="/activity" style="margin-top:20%; height: 100%; width: 100%">
+                        <button class="btn btn-primary" style=" height: 50%; width:40%; margin-left:3%;" name="age_range" value="{{ n }}" type="submit"><h3>⮞</h3></button>
+                        <h5> {{n}}</h5>
+                    {% endif %}
+                    </form>
+                </td>
+                <td style="width: 60%">
+                    <div style="width:100%; text-align: center">
+                        <h2>مهارات للطفل من {{age_range}} سنوات</h2>
+                    </div>
+                </td>
+                <td style="width:20%">
+                    {% if p %}
+                        <form method="POST" action="/activity" style="margin-top:20%; height: 100%; width: 100%">
+                            <button class="btn btn-primary" style="height: 50%; width:40%; margin-right:3%;" name="age_range" value="{{ p }}" type="submit"><h3>⮜</h3></button>
+                            <h5>{{p}}</h5>
+                        {% endif %}
+                        </form>
+                    </td>
+        </tr>
+    </table>
+
+    <div style="display: flex; justify-content: center; gap: 10px;">
+        <form method="get" action="/activity">
+            <input type="hidden" name="age_range" value="{{ age_range }}">
+            <button style='background-color: #B32E31' class="btn2" name="category" value="اللغة" type="submit"><h2>🗣</h2></button>
+            <p >اللغة</p>
+        </form>
+        <form method="get" action="/activity">
+            <input type="hidden" name="age_range" value="{{ age_range }}">
+            <button style='background-color: #FAD052' class="btn2" name="category" value="الإدراك" type="submit"><h2>🧠</h2></button>
+            <p>الإدراك</p>
+        </form>
+        <form method="get" action="/activity">
+            <input type="hidden" name="age_range" value="{{ age_range }}">
+            <button style='background-color: #7CB84B' class="btn2" name="category" value="الحركة" type="submit"><h2>🏃‍♂️</h2></button>
+            <p>الحركة</p>
+        </form>
+        <form method="get" action="/activity">
+            <input type="hidden" name="age_range" value="{{ age_range }}">
+            <button style='background-color: #84A5D9' class="btn2" name="category" value="المساعدة الذاتية" type="submit"><h2>🍴</h2></button>
+            <p>المساعدة<br> الذاتية</p>
+        </form>
+        <form method="get" action="/activity">
+            <input type="hidden" name="age_range" value="{{ age_range }}">
+            <button style='background-color: #9F67C7' class="btn2" name="category" value="المخالطة الاجتماعية" type="submit"><h2>👥</h2></button>
+            <p>المخالطة<br> الاجتماعية</p>
+        </form>
+    </div>
+
+    <p style="font-size: small">اختر ✔️ اذا تمكن طفلك من المهارة<br> اختر ⏹️ عند وجود بدايات للمهارة<br> اختر ❌ اذا لم يتمكن طفلك من المهارة</p>
+    <h3>مجال {{category}}</h3><br>
+
+    <div style="display: flex; justify-content: center;">
+        {% if category == 'اللغة' %}
+            <table class='table blended-table' style="width: 80%; border-color: black; background-color: rgba(179, 46, 49, 0.2); ">
+        {% elif category == 'الإدراك' %}
+            <table class='table blended-table' style="width: 80%; border-color: black; background-color: rgba(250, 208, 82, 0.4); ">
+        {% elif category == 'الحركة' %}
+            <table class='table blended-table' style="width: 80%; border-color: black; background-color: rgba(124, 184, 75, 0.4); ">
+        {% elif category == 'المساعدة الذاتية' %}
+            <table class='table blended-table' style="width: 80%; border-color: black; background-color: rgba(132, 165, 217, 0.4); ">
+        {% elif category == 'المخالطة الاجتماعية' %}
+            <table class='table blended-table' style="width: 80%; border-color: black; background-color: rgba(159, 103, 199, 0.4); ">
+        {% endif %}
+
+        {% for i in data %}
+        <tr>
+            <td>
+                <br>
+                <strong>{{i.title}}-{{ i.performance }}</strong><br><br>
+                <button class="btn btn-primary" style="font-size: 15px;" type="button" data-bs-toggle="modal" data-bs-target="#activitiesModal{{ loop.index }}">
+                    أنشطة مقترحة
+                </button>
+
+                <!-- Modal for Suggested Activities -->
+                <div class="modal fade" id="activitiesModal{{ loop.index }}" tabindex="-1" aria-labelledby="activitiesModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="activitiesModalLabel">أنشطة مقترحة</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <h6>{{ i.performance }}</h6>
+                                <ul class="list-group">
+                                    {% for activity in i.suggested_activities %}
+                                        <li class="list-group-item" style="background-color: rgb(255,255,255,0.3)">{{ activity }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <form method="post" action="/update">
+                    <input type="hidden" name="age_range" value="{{ age_range }}">
+                    <input type="hidden" name="performance_id" value="{{ i.id }}">
+                    <input type="hidden" name="child_age" value="{{ i.age }}">
+                    <input type="hidden" name="performance_title" value="{{ i.title }}">
+                    {% if category == 'اللغة' %}
+                        <input type="hidden" name="category" value="اللغة">
+                    {% elif category == 'الإدراك' %}
+                        <input type="hidden" name="category" value="الإدراك">
+                    {% elif category == 'الحركة' %}
+                        <input type="hidden" name="category" value="الحركة">
+                    {% elif category == 'المساعدة الذاتية' %}
+                        <input type="hidden" name="category" value="المساعدة الذاتية">
+                    {% elif category == 'المخالطة الاجتماعية' %}
+                        <input type="hidden" name="category" value="المخالطة الاجتماعية">
+                    {% endif %}
+                    <label>
+                        <input type="radio" name="scale" value="2" {% if i.scale == 2 %}checked{% endif %}>
+                        <p>✔️</p>
+                    </label>
+                    <label>
+                        <input type="radio" name="scale" value="1" {% if i.scale == 1 %}checked{% endif %}>
+                        <p>⏹️</p>
+                    </label>
+                    <label>
+                        <input type="radio" name="scale" value="0" {% if i.scale == 0 %}checked{% endif %}>
+                        <p>❌</p>
+                    </label>
+                    <label>
+                        <div class="mb-3">
+                            <textarea name="comment" placeholder="ملاحظة" class="form-control" id="comment">{{i.comment}}</textarea>
+                        </div>
+                    </label>
+            </td>
+            <td style="width: 10%">
+                <button type="submit">تأكيد</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    </table>
+
+    <script>
+        function adjustWidth(input) {
+            input.style.width = (input.value.length + 1) + 'ch';
+        }
+
+    </script>
+{% endblock %}

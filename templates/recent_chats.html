@@ -1,0 +1,105 @@
+{%if session['user_type']=='p'%}
+{% extends "layout.html" %}
+{%else%}
+{% extends "layout2.html" %}
+{%endif%}
+
+
+{% block title %}
+    Recent Chats
+{% endblock %}
+
+{% block main %}
+{%if session['user_type']=='s'%}
+<div class="settings-container">
+<div class="image-container" style="width: 150px;height: 150px;border-style: solid;box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4);">
+    <img src="{{ user.img }}" class="rounded-image" alt="Child's Image" >
+                </div>
+<h1>{{ user.name }} </h1>
+<h6>{{user.spec}}</h6>
+    </div><br>
+{%endif%}
+    <h2>📬 المحادثات</h2>
+    {% if recent_chats %}
+        <ul class="chat-list" style="width:60%; margin-left: auto;
+  margin-right: auto;">
+            {% for chat in recent_chats %}
+                <li class="chat-item">
+                    {%if user_type=='p'%}<img src="{{ chat.recipient_image }}" alt="Doctor's Image" class="doctor-img">{%endif%}
+                    <a href="{{ url_for('chat', recipient_id=chat.recipient_id) }}" style="width:100%;">
+                        <div class="chat-recipient">{{ chat.recipient_name }}</div>
+
+                        {%if user_type=='p'%}
+                            {%if chat.sender==1%}
+                            <div class="chat-preview">أنت: {{ chat.content }}</div>
+                            {%else%}
+                            <div class="chat-preview">{{ chat.content }} :{{chat.recipient_name}}</div>
+                            {%endif%}
+                        {%else%}
+                            {%if chat.sender==0%}
+                            <div class="chat-preview">أنت: {{ chat.content }}</div>
+                            {%else%}
+                            <div class="chat-preview">{{ chat.content }} :{{chat.recipient_name}}</div>
+                            {%endif%}
+
+                        {%endif%}
+
+                        <div class="chat-timestamp">{{ chat.timestamp }}</div>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>لا يوجد محادثات بعد.</p>
+    {% endif %}
+
+    <style>
+        .chat-list {
+            list-style: none;
+            padding: 0;
+
+        }
+
+        .chat-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            display: flex;
+            align-items: right;
+        }
+
+        .chat-item a {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .chat-recipient {
+            font-weight: bold;
+            margin-bottom: 5px;
+
+        }
+
+        .chat-preview {
+            color: #555;
+        }
+
+        .chat-timestamp {
+            font-size: 0.8em;
+            color: #888;
+            text-align: right;
+        }
+
+        .chat-item:hover {
+            background-color: #f1f1f1;
+        }
+        .chat-item img.doctor-img {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            margin-right: 15px;
+        }
+    </style>
+{% endblock %}

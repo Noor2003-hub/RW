@@ -1,0 +1,117 @@
+
+{% extends "layout3.html" %}
+
+{% block title %}
+    Homepage
+{% endblock %}
+
+{% block main %}
+<div style="width: 80%; text-align: left; margin-right: 10%; margin-top: 20px">
+    <a href="/approved" class="btn btn-primary" style="background-color: #264653">الاخصائين المقبولين︎</a>
+</div>
+
+<!-- Main content -->
+<main class="container-fluid py-5 text-center">
+    <div class="container">
+        <table class="table table-bordered">
+            <div class="container">
+                <h1>قائمة الطلبات</h1>
+                {% for i in l %}
+                <div class="doctor-card">
+                    <img src="{{ i.img }}" alt="Doctor's Image" class="doctor-img">
+
+                    <div class="doctor-info" style="width:50%;">
+                        <h2>{{ i.name }}</h2>
+                        <p>{{ i.spec }}</p>
+                        <p>تاريخ الميلاد: {{ i.dob }}</p>
+                        <p>تاريخ التخرج: {{ i.grad_year }}</p>
+                        <p>تاريخ الطلب: {{ i.request_date }}</p>
+                    </div>
+
+                    <div class="containerr" style="width:50%;">
+                        <img src="{{ i.certificate }}"
+                             alt="Certificate Image"
+                             style="width:200px;height: auto;cursor: pointer;"
+                             onclick="showModal('{{ i.certificate }}')">
+
+                        <form action="/approve" method="post">
+                            <input type="hidden" name="id" value="{{ i.id }}">
+                            <button type="submit" class="btn btn-success mt-2">قبول</button>
+                        </form>
+                        <form action="/cancle" method="post">
+                            <input type="hidden" name="id" value="{{ i.id }}">
+                            <button type="submit" class="btn btn-danger mt-2">رفض</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </table>
+    </div>
+    {% if not l %}
+    <p>لا يوجد طلبات.</p>
+    {% endif %}
+</main>
+
+<!-- Modal for Full-Screen Preview -->
+<div id="modal" class="modal">
+    <span class="close" onclick="hideModal()">&times;</span>
+    <img class="modal-content" id="modal-img">
+</div>
+
+
+<!-- Modal Styles -->
+<style>
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 10px;
+    left: 10%; /* Position it in the center horizontally */
+    top: 10%;
+    width: auto;
+    height: auto;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.9);
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    width: 80%;
+    max-height: 90%;
+}
+
+.close {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: white;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+</style>
+
+<!-- JavaScript for Modal -->
+<script>
+function showModal(imageSrc) {
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modal-img');
+    modal.style.display = "block";
+    modalImg.src = imageSrc;
+}
+
+function hideModal() {
+    const modal = document.getElementById('modal');
+    modal.style.display = "none";
+}
+</script>
+{% endblock %}

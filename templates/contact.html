@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    اخصائيين
+{% endblock %}
+
+{% block main %}
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Doctor Contacts</title>
+        <style>
+
+
+            .doctor-img {
+                width: 120px;
+                height: 120px;
+                border-radius: 50%;
+                object-fit: cover;
+                margin-right: 20px;
+                box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4);
+            }
+
+            .container {
+                max-width: 1200px;
+                margin: 0 auto;
+                padding: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>💬 خبراء للتواصل</h1>
+            <p>يمكنك الاستعانة بمساعدة المختصين للإجابة عن اي تساؤلات</p>
+            {% for i in l %}
+            <div class="doctor-card">
+                <img src="{{ i.img }}" alt="Doctor's Image" class="doctor-img">
+                <div class="doctor-info">
+                    <h2>{{ i.name }}</h2>
+                    <p>{{ i.spec }}</p>
+
+                    <span class="show-more" onclick="toggleDetails(this)">عرض المزيد</span>
+                    <div class="doctor-details">
+                        <p><strong>سنوات الخبرة:</strong> {{ i.grad_year }}</p>
+                        {% if i.desc %}
+                        <p style="white-space: normal; overflow-wrap: break-word;"><strong>نبذة:</strong> {{ i.desc }}</p>
+                        {% endif %}
+                        <button onclick="window.location.href='/chat/{{ i.id }}'">ابدأ الدردشة 💬</button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <script>
+            function toggleDetails(element) {
+                const details = element.nextElementSibling;
+                details.style.display = details.style.display === "none" ? "block" : "none";
+                element.textContent = details.style.display === "none" ? "عرض المزيد" : "عرض أقل";
+            }
+        </script>
+    </body>
+{% endblock %}

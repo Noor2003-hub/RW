@@ -1,0 +1,243 @@
+{% extends "layout.html" %}
+
+{% block title %}
+Development Charts
+{% endblock %}
+
+{% block main %}
+{% if get_flashed_messages() %}
+<a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">هل تم رصد تأخر لدى طفلك؟</a>
+    <!-- Terms and Conditions Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termsModalLabel">هل تم رصد تأخر لدى طفلك؟</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" dir="rtl">
+                    <ul>
+
+                        <li>هذه الرسالة تدل على ان طفلك متأخر بمقدار عامين عن عمره أو اكثر, هذا يدل على وجد حاجز لنمو الطفل و يجب تحديده و التعامل معه</li>
+                        <li>حاول ملاحظة المجال الي تأخر فيه الطفل بمقدار عامين أو اكثر و التأكد من ان الطفل لا يمكنه القيام بتلك المهارات</li>
+                        <li><strong>في حال تأكدك من وجود تأخر في مجال معين أو اكثر, ينصح باستشارة طبية من احد المختصين عبر الموقع أو خارجه.</strong></li>
+                        <li>ينصح بانشاء حساب جديد في حال التأكد من حالة الطفل, يتم التعامل بطريقة فعالة اكثر في حال التعرف على حالة الطفل بالتحديد.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+<h2 dir="rtl">📈 مخططات بيانية</h2>
+<p>تساعد المخططات في توضيح مدى تقدم طفلك في الأهداف:</p>
+
+<!-- Section 2: Pie Charts -->
+<style>
+    .pie-chart {
+        max-width: 200px; /* Default size */
+        max-height: 200px; /* Default size */
+    }
+</style>
+
+<div class="container mt-5">
+    <h3>مخططات دائرية</h3>
+    <div style="display: flex; justify-content: center; align-items: center; flex-wrap: wrap;">
+        {% for category, color, last_percentage in zipped_data %}
+        <div style="margin: 10px;">
+            <canvas id="pieChart_{{ loop.index }}" class="pie-chart" style="background-color:rgba(255, 255, 255, 0.2);"></canvas>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+<!-- Section 3: Line Chart -->
+<div class="container mt-5">
+    <h3>مخطط خطي</h3>
+    <label for="timeRange">اختر نطاق الوقت:</label>
+    <div style="text-align: center;">
+    <button {%if not time_range=='week' and not time_range is none%}style="background-color:gray;"{%endif%} onclick="changeTimeRange('week')">الأسبوع</button>
+    <button {%if not time_range=='month'%}style="background-color:gray;"{%endif%}onclick="changeTimeRange('month')">الشهر</button>
+    <button {%if not time_range=='year'%}style="background-color:gray;"{%endif%}onclick="changeTimeRange('year')">السنة</button>
+</div>
+</div>
+
+<br>
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh;">
+    <canvas id="lineChart" style="height:200%;width:200%; background-color:rgba(255, 255, 255, 0.5);"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Function to change the time range and reload the data
+    function changeTimeRange(range) {
+        window.location.href = '/view_development?time_range=' + range;
+    }
+
+    // Prepare the line chart data based on the existing organized_data
+    const lineData = {
+        labels: [],  // Initialize empty labels
+        datasets: [
+            {% for category, color, last_percentage in zipped_data %}
+            {
+                label: '{{ category }}',
+                data: [],  // Initialize empty data
+                borderColor: '{{ color[0] }}',
+                backgroundColor: '{{ color[1] }}',
+            }
+            {% if not loop.last %},{% endif %}
+            {% endfor %}
+        ]
+    };
+
+    // Populate lineData.labels and lineData.datasets with actual dates and percentages
+    const dataa = {{ dataa | tojson }};
+    for (const category in dataa) {
+        for (const record of dataa[category]) {
+            const date = record.time;
+            const percentage = record.percentage;
+
+            // Only push to labels if it's not already present
+            if (!lineData.labels.includes(date)) {
+                lineData.labels.push(date);
+            }
+
+            // Find the index of the category dataset
+            const datasetIndex = lineData.datasets.findIndex(dataset => dataset.label === category);
+            if (datasetIndex !== -1) {
+                // Fill the data for the specific date
+                lineData.datasets[datasetIndex].data.push(percentage);
+            }
+        }
+    }
+
+    // Line chart configuration
+    const lineConfig = {
+        type: 'line',
+        data: lineData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: {
+                        font: {
+                            size: 16 // Increase legend label font size
+                        }
+                    }
+                },
+                title: {
+                    display: true,
+    {%if time_range=='month'%}
+        text: 'المخطط الخطي لتطور طفلك لهذا الشهر',
+        {%elif time_range=='year'%}
+        text: 'المخطط الخطي لتطور طفلك لهذا العام',
+        {%else%}
+        text: 'المخطط الخطي لتطور طفلك لهذا الاسبوع',
+        {%endif%}
+
+                    font: {
+                        size: 20 // Increase title font size
+                    }
+                }
+            },
+            scales: {
+                x: {
+                    offset: true,
+                    ticks: {
+                        font: {
+                            size: 14
+                        }
+                    }
+                },
+                y: {
+                    beginAtZero: true,
+                    min: 0,
+                    max: 100,
+                    ticks: {
+                        font: {
+                            size: 14
+                        },
+                        callback: function(value) {
+                            return value + '%';
+                        }
+                    }
+                }
+            },
+            elements: {
+                point: {
+                    radius: 6,
+                    hoverRadius: 8,
+                }
+            }
+        }
+    };
+
+    // Pie chart configurations
+    {% for category, color, last_percentage in zipped_data %}
+{% set rounded_percentage = last_percentage|round(2) %}
+const pieLabels_{{ loop.index }} = ['مكتمل', 'غير مكتمل'];
+const pieData_{{ loop.index }} = {
+    labels: pieLabels_{{ loop.index }},
+    datasets: [
+        {
+            label: '{{ category }}',
+            data: [{{ rounded_percentage }}, 100 - {{ rounded_percentage }}],
+            backgroundColor: [
+                '{{ color[1] }}',
+                '#f0f0f0'
+            ],
+            hoverOffset: 10
+        }
+    ]
+};
+
+const pieConfig_{{ loop.index }} = {
+    type: 'pie',
+    data: pieData_{{ loop.index }},
+    options: {
+        responsive: true,
+        plugins: {
+            legend: {
+                position: 'top',
+                labels: {
+                    font: {
+                        size: 14
+                    }
+                }
+            },
+            title: {
+                display: true,
+                text: '{{ category }} : {{ rounded_percentage }}%',
+                font: {
+                    size: 17
+                }
+            }
+        },
+        layout: {
+            padding: {
+                top: 10,
+                bottom: 10
+            }
+        }
+    }
+};
+{% endfor %}
+
+
+    // Render the charts
+    window.onload = function() {
+        // Render line chart
+        const lineCtx = document.getElementById('lineChart').getContext('2d');
+        new Chart(lineCtx, lineConfig);
+
+        // Render each pie chart
+        {% for category, color, last_percentage in zipped_data %}
+        const pieCtx_{{ loop.index }} = document.getElementById('pieChart_{{ loop.index }}').getContext('2d');
+        new Chart(pieCtx_{{ loop.index }}, pieConfig_{{ loop.index }});
+        {% endfor %}
+    };
+</script>
+
+{% endblock %}

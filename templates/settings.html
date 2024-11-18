@@ -1,0 +1,126 @@
+{% if session['user_type'] == 'p' %}
+{% extends "layout.html" %}
+{% else %}
+{% extends "layout2.html" %}
+{% endif %}
+
+{% block title %}
+    Settings
+{% endblock %}
+
+{% block main %}
+
+<h1>⚙️ الإعدادات</h1>
+<div class="settings-container">
+{% if session['user_type'] == 'p' %}
+    <form action="/settings" method="post" enctype="multipart/form-data" class="settings-form">
+        <div class="form-group">
+            <label for="child_img">صورة الطفل: </label>
+            <div class="image-container" style="width: 150px; height: 150px;">
+                <img src="/{{ child.photo_path }}" alt="Child Image" id="child-img-preview" class="rounded-image">
+            </div>
+            <input type="file" class="form-control" name="child_img" id="child_img" onchange="cropAndPreviewImage(event)">
+        </div>
+        <div class="form-group">
+            <label for="child_name">أسم الطفل: </label>
+            <input type="text" class="form-control" name="child_name" id="child_name" value="{{ child.name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="username">اسم المستخدم: </label>
+            <input type="text" class="form-control" name="username" id="username" value="{{ user.username }}" required>
+        </div>
+        <div class="form-group">
+            <label for="email">البريد الالكتروني: </label>
+            <input type="email" class="form-control" name="email" id="email" value="{{ user.email }}" required>
+        </div>
+        <div class="containerr">
+            <button type="submit" class="btn btn-primary">تأكيد</button>
+            <a href="/logout" class="btn btn-danger" style="font-size: 20px; background-color: #e56866; margin-left: auto; margin-right: auto;">تسجيل الخروج</a>
+        </div>
+    </form>
+{% else %}
+    <form action="/settings" method="post" enctype="multipart/form-data" class="settings-form">
+        <div class="form-group">
+            <label for="img">الصورة الشخصية: </label>
+            <div class="image-container" style="width: 150px; height: 150px;">
+                <img src="/{{ user.img }}" alt="Profile Image" id="child-img-preview" class="rounded-image">
+            </div>
+            <input type="file" class="form-control" name="img" id="img" onchange="cropAndPreviewImage(event)">
+        </div>
+        <div class="form-group">
+            <label for="username">أسم المستخدم: </label>
+            <input type="text" class="form-control" name="username" id="username" value="{{ user.username }}" required>
+        </div>
+        <div class="form-group">
+            <label for="name">الأسم الكامل: </label>
+            <input type="text" class="form-control" name="name" id="name" value="{{ user.name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="spec">التخصص: </label>
+            <input type="text" class="form-control" name="spec" id="spec" value="{{ user.spec }}" required>
+        </div>
+        <div class="form-group">
+            <label for="date">تاريخ الميلاد: </label>
+            <input type="date" class="form-control" name="dob" id="dob" value="{{ user.dob }}" required>
+        </div>
+        <div class="form-group">
+            <label for="date_of_grad">سنة التخرج: </label>
+            <input type="number" class="form-control" id="date_of_grad" name="date_of_grad" min="1900" max="{{ now }}" placeholder="YYYY" value="{{ user.grad_year }}" required>
+        </div>
+        <div class="form-group">
+            <label for="desc">النبذة: </label>
+            <textarea name="desc" class="form-control" id="desc" style="height: 100px;">{{ user.desc }}</textarea>
+        </div>
+        <div class="form-group">
+            <label for="email">البريد الالكتروني: </label>
+            <input type="email" class="form-control" name="email" id="email" value="{{ user.email }}" required>
+        </div>
+        <div class="containerr">
+            <button type="submit" class="btn btn-primary">تأكيد</button>
+            <a href="/logout" class="btn btn-danger" style="font-size: 20px; background-color: #e56866; margin-left: auto; margin-right: auto;">تسجيل الخروج</a>
+        </div>
+    </form>
+{% endif %}
+    <p class="mt-3">
+        <a href="/forgot_password">تغيير كلمة المرور</a>
+    </p>
+</div>
+
+<script>
+    function cropAndPreviewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('child-img-preview');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const image = new Image();
+                image.src = e.target.result;
+                image.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+
+                    // Crop to square (take the shortest side as dimension)
+                    const sideLength = Math.min(image.width, image.height);
+                    canvas.width = sideLength;
+                    canvas.height = sideLength;
+                    ctx.drawImage(image, (image.width - sideLength) / 2, (image.height - sideLength) / 2, sideLength, sideLength, 0, 0, sideLength, sideLength);
+
+                    // Update preview image with the cropped version
+                    preview.src = canvas.toDataURL('image/png');
+
+                    // Convert the canvas data to a blob and update the input file
+                    canvas.toBlob(function(blob) {
+                        const croppedFile = new File([blob], input.files[0].name, { type: 'image/png' });
+                        const dataTransfer = new DataTransfer();
+                        dataTransfer.items.add(croppedFile);
+                        input.files = dataTransfer.files;
+                    }, 'image/png');
+                };
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
+
+{% endblock %}

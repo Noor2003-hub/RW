@@ -1,0 +1,192 @@
+{%if session['user_type']=='p'%}
+{% extends "layout.html" %}
+{% else %}
+{% extends "layout2.html" %}
+{% endif %}
+
+{% block title %}
+    Chat with {{ recipient.name }}
+{% endblock %}
+{% block main %}
+<div style="width: 100%; text-align: left">
+    <a href="/recent_chats" class="btn" style=" color: white; place-content: center; margin: auto; font-size: 20px; border-color: black;">العودة ⬅</a>
+</div>
+{%if session['user_type']=='p'%}
+<img src="/{{recipient.img}}" alt="Doctor's Image" class="doctor-img">
+{%endif%}
+<h2>{{ recipient.name }}</h2>
+<div id="chat-window">
+    {% for message in messages %}
+        {% if (user_type == 'p' and message.sender == 1) or (user_type == 's' and message.sender == 0) %}
+            <div class="my-message">
+                <span class="message-content">{{ message.content }}</span>
+                <span class="timestamp-left">{{ message.timestamp }}</span>
+            </div>
+        {% else %}
+            <div class="their-message">
+                <span class="timestamp-right">{{ message.timestamp }}</span>
+                <span class="message-content">{{ message.content }}</span>
+            </div>
+        {% endif %}
+    {% endfor %}
+    {% if seen %}
+        <p class="seen-status">Seen</p>
+    {% endif %}
+</div>
+<form id="chat-form">
+    <textarea name="message" id="message-input" placeholder="اكتب رسالة..." required></textarea>
+    <button class="btn-primary" type="submit"><h3>➣</h3></button>
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var chatWindow = document.getElementById("chat-window");
+        chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
+
+        document.getElementById("chat-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent the form from submitting traditionally
+
+            var messageContent = document.getElementById("message-input").value;
+
+            if (messageContent.trim() === "") {
+                return; // Don't submit empty messages
+            }
+
+            var submitButton = document.querySelector(".btn-primary");
+            submitButton.innerHTML = "<div class='loader'></div>"; // Show loading animation
+            submitButton.disabled = true; // Disable the button to prevent multiple submissions
+
+            // AJAX request to send the message
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState == 4 && xhr.status == 200) {
+                    // Clear the input field
+                    document.getElementById("message-input").value = "";
+                    submitButton.innerHTML = "<h3>➣</h3>"; // Reset the button
+                    submitButton.disabled = false;
+
+                    // Optionally, you could also append the new message to the chat window here
+                    chatWindow.innerHTML += xhr.responseText;
+                    chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
+                }
+            };
+
+            // Send the message content to the server
+            xhr.send("message=" + encodeURIComponent(messageContent));
+        });
+    });
+</script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var chatWindow = document.getElementById("chat-window");
+        chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
+
+        document.querySelector("form").onsubmit = function(event) {
+            event.preventDefault(); // Prevent the form from submitting immediately
+            var submitButton = document.querySelector(".btn-primary");
+            submitButton.innerHTML = "<div class='loader'></div>"; // Show loading animation
+            submitButton.disabled = true; // Disable the button to prevent multiple submissions
+
+            // Allow some time for the loading animation to show before submitting the form
+            setTimeout(function() {
+                event.target.submit(); // Submit the form after the delay
+            }, 100); // Adjust the delay if necessary
+        }
+    });
+</script>
+<style>
+    .seen-status {
+    text-align: right;
+    margin: 0;
+    padding: 0;
+    font-size: 0.9em;
+    color: #333;
+}
+    #chat-window {
+        border: 1px solid #ccc;
+        padding: 10px;
+        height: 300px;
+        overflow-y: scroll;
+        background-color: #f9f9f9;
+        margin-bottom: 15px;
+    }
+
+    .my-message {
+        display: flex;
+        justify-content: flex-start;
+        margin-bottom: 10px;
+        align-items: center;
+    }
+
+    .their-message {
+        display: flex;
+        justify-content: flex-end;
+        margin-bottom: 10px;
+        align-items: center;
+    }
+
+    .my-message .message-content {
+        background-color: #d1e7dd;
+        padding: 5px 10px;
+        border-radius: 5px;
+        max-width: 60%;
+        text-align: right;
+        margin-left: 10px;
+    }
+
+    .their-message .message-content {
+        background-color: #d9dcde;
+        padding: 5px 10px;
+        border-radius: 5px;
+        max-width: 60%;
+        text-align: left;
+        margin-right: 10px;
+    }
+
+    .timestamp-left {
+        font-size: 0.8em;
+        color: #666;
+        min-width: 100px;
+        text-align: left;
+    }
+
+    .timestamp-right {
+        font-size: 0.8em;
+        color: #666;
+        min-width: 100px;
+        text-align: right;
+    }
+
+    form {
+        display: flex;
+        align-items: center;
+    }
+
+    textarea {
+        width: 85%;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        resize: none;
+    }
+
+    button {
+        width: 50px;
+        height: 50px;
+        border: none;
+        background-color: #007bff;
+        color: #fff;
+        border-radius: 50%;
+        cursor: pointer;
+        margin-left: 10px;
+        font-size: 1.5em;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends "layout.html" %}
+{% block title %}
+    Register
+{% endblock %}
+{% block main %}
+    <style>
+
+    </style>
+<style>
+
+</style>
+<div class="progress-bar-container">
+    <div class="step" id="step1">
+        <span>1</span>
+        <div class="label">اسم المستخدم و كلمة المرور</div>
+    </div>
+    <div class="step" id="step2">
+        <span>2</span>
+        <div class="label">معلومات عن الطفل</div>
+    </div>
+    <div class="step" id="step3">
+        <span>3</span>
+        <div class="label">تقييم مستوى الطفل</div>
+    </div>
+</div>
+
+<script>
+    function setStep(currentStep) {
+        const steps = document.querySelectorAll('.step');
+        steps.forEach((step, index) => {
+            if (index < currentStep - 1) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else if (index === currentStep - 1) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active');
+                step.classList.remove('completed');
+            }
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentStep = {{ current_step }};
+        setStep(currentStep);
+    });
+</script>
+<br>
+<div class="settings-container">
+    <form action="/register" id="loginForm" method="post" style="width:50%; margin-left: auto; margin-right: auto;">
+        <div class="mb-3">
+            <input name="username" class="form-control" type="text" autocomplete="off" autofocus placeholder="اسم المستخدم">
+        </div>
+        <div class="mb-3">
+            <input name="email" class="form-control" type="text" autocomplete="off" autofocus placeholder="البريد الإلكتروني">
+        </div>
+        <div class="mb-3">
+            <input id="password" name="password" class="form-control" type="password" placeholder="كلمة المرور">
+            <div id="password-strength" class="mt-2"></div>
+        </div>
+        <div class="mb-3">
+            <input name="confirmation" class="form-control" type="password" placeholder="تأكيد كلمة المرور">
+        </div>
+        <div class="terms-container">
+            <label  style=" width:100%; margin-right:-5px; font-size: medium">
+                <input type="checkbox" id="termsCheckbox" onclick="toggleSubmitButton()">
+                أوافق على <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">شروط الاستخدام</a> وألتزم بها.
+            </label>
+        </div>
+        <button class="btn btn-primary" id="submitButton" type="submit" disabled>التالي</button>
+    </form>
+    <!-- Terms and Conditions Modal -->
+    <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="termsModalLabel">شروط الاستخدام</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" dir="rtl">
+                    <ul>
+                        <li>قم بالرد على المتخصصين بأدب واحترام.هذا المجتمع مخصص لدعم الآباء وأطفالهم. المشاركة في المناقشات باحترام، وتجنب اللغة العدائية، والحفاظ على نبرة إيجابية عند التعامل مع المتخصصين والمستخدمين الآخرين.</li>
+                        <li>تأكد من أن جميع المعلومات المقدمة أثناء التسجيل (مثل عمر الطفل وتاريخ نموه ومعلومات الاتصال) صادقة ودقيقة.</li>
+                        <li>الغرض من المنصة هو تقديم إرشادات مهنية تستند إلى مبادئ النمو العامة. لا يحل دليل الوالدين محل التشخيصات الطبية أو العلاج. استشر دائمًا مقدم الرعاية الصحية الخاص بك بشأن أي مخاوف طبية أو حالات طارئة.</li>
+                        <li>التزم بطرح الاستفسارات المتعلقة بمشكلتك فقط.</li>
+                        <li>احتفظ بالاستفسارات ضمن نطاق نمو الطفل، أو نصائح الأبوة، أو المواضيع ذات الصلة التي تغطيها خدمات المنصة. تجنب المواضيع غير ذات الصلة بمهمة المنصة لضمان التوجيه الفعال والتركيز على المتخصصين.</li>
+                        <li>تم تصميم هذه المنصة للآباء الذين يسعون للحصول على نصائح تنموية لأطفالهم. امتنع عن استخدامها لأغراض أخرى (على سبيل المثال، الترويج لمنتجات أو خدمات غير ذات صلة، أو مشاركة المظالم الشخصية).</li>
+                        <li>يسعى المتخصصون إلى الاستجابة بسرعة، ولكن قد تختلف أوقات الاستجابة. تجنب الرسائل المتكررة أو المتابعة إذا كانت هناك استجابة معلقة، واحترم ساعات عمل المتخصصين وتوافرهم.</li>
+                        <li>يتطور كل طفل وفقًا لسرعته الخاصة، وبينما يمكن للإرشاد أن يساعد في التنمية، فلا توجد نتيجة مضمونة. احترم فردية تقدم طفلك.</li>
+                        <li>احرص على عدم مشاركة معلومات شخصية حساسة أو سرية.</li>
+                        <li>يقدم المتخصصون الإرشاد، ولكن بصفتك أحد الوالدين، تظل مسؤولاً عن جميع القرارات النهائية المتعلقة برعاية طفلك ورفاهيته.</li>
+                        <li> تعاون مع المتخصصين للحصول على أفضل النصائح والإجابات.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="mt-3">
+        <a href="/login_p">تملك حساب بالفعل؟ سجل الدخول</a>
+    </p>
+    <p class="mt-3">
+        <a href="/register2">إنشاء حساب اخصائي؟</a>
+    </p>
+</div>
+<script>
+    function toggleSubmitButton() {
+            const termsCheckbox = document.getElementById('termsCheckbox');
+            const submitButton = document.getElementById('submitButton');
+            submitButton.disabled = !termsCheckbox.checked;
+        }
+    document.getElementById('password').addEventListener('input', function() {
+        const password = this.value;
+        const strengthIndicator = document.getElementById('password-strength');
+        let strength = 0;
+        if (password.length >= 5) strength += 1;
+        if (/\d/.test(password)) strength += 1;
+        let strengthText;
+        switch (strength) {
+            case 0:
+                strengthText = '<span style="color:red;">ضعيفة جدا: كلمة المرور يجب أن تتكون من 5 حروف على الأقل وتحتوي على رقم واحد على الأقل</span>';
+                break;
+            case 1:
+                strengthText = '<span style="color:orange;">ضعيفة: كلمة المرور يجب أن تحتوي على رقم واحد على الأقل</span>';
+                break;
+            case 2:
+                strengthText = '<span style="color:green;">قوية</span>';
+                break;
+        }
+        strengthIndicator.innerHTML = `${strengthText}`;
+    });
+    document.getElementById('loginForm').addEventListener('keydown', function(event) {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            const inputs = Array.from(this.querySelectorAll('input'));
+            const currentIndex = inputs.indexOf(document.activeElement);
+            if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
+                inputs[currentIndex + 1].focus();
+            } else {
+                this.submit();
+            }
+        }
+    });
+</script>
+{% endblock %}

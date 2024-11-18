@@ -1,0 +1,340 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Homepage
+{% endblock %}
+
+{% block main %}
+
+<div class="container" style="display: flex; justify-content: center; z-index: 2; position: relative; width:100%;">
+
+
+    <!-- Left section (button and image) -->
+    <div style="flex: 10; display: flex; flex-direction: column; align-items: center;">
+        <form method="post" action="/home_tut" style="position: absolute; left:5px; z-index: 3;">
+            <button class="btn2" type="submit" style="background: none; border: none;">
+                <h2>❔</h2>
+            </button>
+        </form>
+        <p style="position: absolute; padding-top: 60px; left:5px; background: none; border: none; z-index: 2; cursor: pointer; text-align: left; margin-left: 7px;">
+            مساعدة
+        </p>
+
+        {% if conf %}
+        <div class="confetti">
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+            <div class="confetti-piece"></div>
+        </div>
+        {% endif %}
+
+        <div class="image-container" style="border-style: solid;box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.4);">
+            <img src="/{{img}}" class="rounded-image" alt="Child's Image">
+        </div>
+
+        <h1 >{{ name }}</h1>
+        <form method="GET" action="/view_development">
+            {% if gender == 'female' %}
+                <h3>تبلغ {{ age }}<h6><button type="submit">مستوى {{name}}</button></h6></h3>
+            {% else %}
+                <h3>يبلغ {{ age }}<h6><button type="submit">مستوى {{name}}</button></h6></h3>
+            {% endif %}
+            {% if disability %}
+                <p>طفلك يجب ان يكمل المهارات للفئة العمرية {{ chosen }} سنوات</p>
+            {% endif %}
+        </form>
+    </div>
+
+
+</div>
+
+
+{%if data%}
+<table style="width:100%">
+    <tr>
+        <td style="width: 80%">
+            <div style="width:80%; margin-left: auto;
+  margin-right: auto; text-align: right">
+            <!-- Heading with question mark icon to open modal -->
+<h2 dir="rtl">قائمة الأهداف
+    <button style="font-size:20px; background-color: transparent; border-color: transparent;" data-bs-toggle="modal" data-bs-target="#infoModal" aria-label="Information">
+        �
+    </button>
+</h2>
+
+<!-- Text based on gender -->
+
+
+<!-- Modal structure for additional information -->
+<div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="infoModalLabel">ما هي قائمة الاهداف؟</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% if gender == 'female' %}
+                <p>المهارات التالية هي الأهداف التي يجب العمل عليها مع طفلتك {{ name }} مرتبة حسب الأهمية.
+                   اطلع على الأنشطة المقترحة لتساعدك على تعليم المهارة، في حال تعلم طفلك المهارة ضع العلامة ✔️ للانتهاء منها.</p>
+                {% else %}
+                <p>المهارات التالية هي الأهداف التي يجب العمل عليها مع طفلك {{ name }} مرتبة حسب الأهمية.
+                   اطلع على الأنشطة المقترحة لتساعدك على تعليم المهارة، في حال تعلم طفلك المهارة ضع العلامة ✔️ للانتهاء منها.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </td>
+        <td  style="width: 50%">
+            <div style="width: 80%; text-align: right">
+                <form method="post" action="/ach"><h4>{{total}}/{{done}}&nbsp;<button type="submit"><h2>🏆</h2></button></h4>
+            </form></div>
+        </td>
+    </tr>
+</table>
+<form method="GET" action="/home" style="width:100%; padding-right: 10%; padding-left: 10%">
+    <div class="filter-container" style="display: flex; gap: 10px;">
+
+        <!-- Category Filter -->
+
+        <select name="category" class="form-select">
+            <option value="">جميع المجالات</option>
+            <option value="اللغة"{% if selected_category == 'اللغة' %}selected {%endif%}>🗣 اللغة</option>
+            <option value="الإدراك" {% if selected_category == 'الإدراك' %}selected {%endif%}>🧠 الإدراك</option>
+            <option value="الحركة"{% if selected_category == 'الحركة' %}selected {%endif%}>🏃‍♂️ الحركة</option>
+            <option value="المساعدة الذاتية"{% if selected_category == 'المساعدة الذاتية' %}selected {%endif%}>🍴 المساعدة الذاتية</option>
+            <option value="المخالطة الاجتماعية"{% if selected_category == 'المخالطة الاجتماعية' %}selected {%endif%}>👥 المخالطة الاجتماعية</option>
+        </select>
+
+        <!-- Age Range Filter -->
+        <select name="age_range" class="form-select">
+            <option value="">جميع الفئات العمرية</option>
+            {% for range in ranges %}
+                <option value="{{ range }}" {% if selected_age_range == range %}selected{%endif%}>{{ range }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Assessment Filter -->
+        <select name="scale" class="form-select">
+            <option value="">جميع التقييمات</option>
+            <option value="1" {% if selected_scale == '1' %}selected{%endif%}>⏹️ قيد التقدم</option>
+            <option value="0" {% if selected_scale == '0' %}selected{%endif%}>❌ لم يكتمل</option>
+        </select>
+
+        <!-- Filter Button -->
+        <button type="submit" class="btn btn-primary">بحث</button>
+    </div>
+</form>
+            <table id="myTable" class="blended-table" style="  margin-left: auto;
+  margin-right: auto; width: 80%;  background-color: rgba(255,255,255, 0.1);">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>المهارة</th>
+                        <th>التقييم</th>
+                        <th>-</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in data %}
+<tr style="width: 80%; background-color:
+    {% if i.category == 'اللغة' %} rgba(179, 46, 49, 0.4);
+    {% elif i.category == 'الإدراك' %} rgba(250, 208, 82, 0.4);
+    {% elif i.category == 'الحركة' %} rgba(124, 184, 75, 0.4);
+    {% elif i.category == 'المساعدة الذاتية' %} rgba(132, 165, 217, 0.4);
+    {% elif i.category == 'المخالطة الاجتماعية' %} rgba(159, 103, 199, 0.4);
+    {% endif %}">
+    <td style='width:10%;'><strong><h5>{{ loop.index }}</h5></strong></td>
+    <td>
+        <h3 class="card-title" style="display: inline; margin-right: 10px;">
+            {% if i.category == 'اللغة' %}🗣{% elif i.category == 'الإدراك' %}🧠{% elif i.category == 'الحركة' %}🏃‍♂️{% elif i.category == 'المساعدة الذاتية' %}🍴{% elif i.category == 'المخالطة الاجتماعية' %}👥{% endif %}
+        </h3>
+        <span style="font-size: 17px;">{{ i.category }}</span>
+        <p class="card-text"><strong>العمر:</strong> {% if i.age == '0 – 1' %} منذ الولادة – 1 {% else %}{{ i.age }}{% endif %}</p>
+        <div><strong>{{ i.title }} - {{ i.performance }}</strong>&nbsp;</div>
+        <br>
+        <button style="font-size: 15px;" class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#activitiesModal{{ loop.index }}" data-title="{{ i.title }}" data-activities="{{ i.suggested_activities|tojson }}">
+            أنشطة مقترحة
+        </button>
+
+        <!-- Modal for Suggested Activities -->
+        <div class="modal fade" id="activitiesModal{{ loop.index }}" tabindex="-1" aria-labelledby="activitiesModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="activitiesModalLabel">أنشطة مقترحة</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="activitiesModalBody{{ loop.index }}">
+                        <h6>{{ i.performance }}</h6>
+                        <ul class="list-group">
+                            {% for activity in i.suggested_activities %}
+                                <li class="list-group-item" style="background-color: rgb(255,255,255,0.3)">{{ activity }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+                        </td>
+                        <td>
+                            <form method="post" action="/update2">
+                                <input type="hidden" name="category" value="{{ i.category }}">
+                                <input type="hidden" name="performance_id" value="{{ i.id }}">
+                                <input type="hidden" name="child_age" value="{{ i.age }}">
+                                <input type="hidden" name="performance_title" value="{{ i.title }}">
+                                <label>
+        <input type="radio" name="scale" value="2" id="scale-2" {% if i.scale == 2 %}checked{% endif %}>
+        <p>✔️</p>
+    </label>
+
+    <label>
+        <input type="radio" name="scale" value="1" id="scale-1" {% if i.scale == 1 %}checked{% endif %}>
+        <p>⏹️</p>
+    </label>
+
+    <label>
+        <input type="radio" name="scale" value="0" id="scale-0" {% if i.scale == 0 %}checked{% endif %}>
+        <p>❌</p>
+    </label>
+                                <label>
+                        <div class="mb-3">
+                            <textarea name="comment" placeholder="ملاحظة" class="form-control" id="comment">{{i.comment}}</textarea>
+
+                        </div>
+                    </label></td><td style="width: 10%">
+                                <button type="submit">تأكيد</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+
+{%else%}
+{% if selected_scale or selected_category or selected_age_range %}
+<table style="width:100%">
+    <tr>
+        <td style="width: 80%">
+            <div style="width:80%; margin-left: auto;
+  margin-right: auto; text-align: right">
+            <h2 dir="rtl">قائمة الأهداف</h2>
+                {% if gender=='female' %}
+                <p>
+                المهارات التالية هي الأهداف التي يجب العمل عليها مع طفلتك {{name}} مرتبة حسب الأهمية.
+                اطلع على الانشطة المقترحة لتساعدك على تعليم المهارة, في حال تعلم طفلك المهارة ضع العلامة ✔️ للانتهاء منها
+            </p>
+                {%else%}
+                <p>
+                المهارات التالية هي الأهداف التي يجب العمل عليها مع طفلك {{name}} مرتبة حسب الأهمية.
+                اطلع على الانشطة المقترحة لتساعدك على تعليم المهارة, في حال تعلم طفلك المهارة ضع العلامة ✔️ للانتهاء منها
+            </p>
+                {%endif%}
+            </div>
+        </td>
+        <td  style="width: 50%">
+            <div style="width: 80%; text-align: right">
+                <form method="post" action="/ach"><h4>{{total}}/{{done}}&nbsp;<button type="submit"><h2>🏆</h2></button></h4>
+            </form></div>
+        </td>
+    </tr>
+</table>
+                <form method="GET" action="/home" style="width:100%; padding-right: 10%; padding-left: 10%">
+    <div class="filter-container" style="display: flex; gap: 10px;">
+
+        <!-- Category Filter -->
+
+        <select name="category" class="form-select">
+            <option value="">جميع المجالات</option>
+            <option value="اللغة"{% if selected_category == 'اللغة' %}selected {%endif%}>🗣 اللغة</option>
+            <option value="الإدراك" {% if selected_category == 'الإدراك' %}selected {%endif%}>🧠 الإدراك</option>
+            <option value="الحركة"{% if selected_category == 'الحركة' %}selected {%endif%}>🏃‍♂️ الحركة</option>
+            <option value="المساعدة الذاتية"{% if selected_category == 'المساعدة الذاتية' %}selected {%endif%}>🍴 المساعدة الذاتية</option>
+            <option value="المخالطة الاجتماعية"{% if selected_category == 'المخالطة الاجتماعية' %}selected {%endif%}>👥 المخالطة الاجتماعية</option>
+        </select>
+
+        <!-- Age Range Filter -->
+        <select name="age_range" class="form-select">
+            <option value="">جميع الفئات العمرية</option>
+            {% for range in ranges %}
+                <option value="{{ range }}" {% if selected_age_range == range %}selected{%endif%}>{{ range }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Assessment Filter -->
+        <select name="scale" class="form-select">
+            <option value="">جميع التقييمات</option>
+            <option value="1" {% if selected_scale == '1' %}selected{%endif%}>⏹️ قيد التقدم</option>
+            <option value="0" {% if selected_scale == '0' %}selected{%endif%}>❌ لم يكتمل</option>
+        </select>
+
+        <!-- Filter Button -->
+        <button type="submit" class="btn btn-primary">بحث</button>
+    </div>
+</form>
+<h5>لا يوجد نتائج.</h5>
+{%else%}
+<table style="width:100%">
+    <tr>
+        <td style="width: 80%">
+            <div style="width:80%; margin-left: auto;
+  margin-right: auto; text-align: right">
+            <h2 dir="rtl">قائمة الأهداف</h2>
+            <h5>أتممت جميع المهارات اللازمة لطفلك 🎉 طفلك الآن يمتلك جميع المهارات التي يحتاجها 💯</h5></div>
+        </td>
+        <td  style="width: 50%">
+            <div style="width: 80%; text-align: right">
+                <form method="post" action="/ach"><h4>{{total}}/{{done}}&nbsp;<button type="submit"><h2>🏆</h2></button></h4>
+            </form></div>
+        </td>
+    </tr>
+</table>
+{%endif%}
+{%endif%}
+<br>
+<h6>يمكنك الاطلاع على مهارات من فئات عمرية سابقة:</h6>
+            <div class="containerr">
+
+                {% for i in ranges %}
+                <form method="POST" action="/activity">
+                    <button class="btn card2" name="age_range" value="{{ i }}" type="submit">{{ i }} سنوات</button>
+                </form>
+                {% endfor %}
+            </div>
+<script>
+    function adjustWidth(input) {
+        input.style.width = (input.value.length + 1) + 'ch';
+    }
+
+    // If there's already a value in the input, adjust the width on page load
+    document.querySelectorAll('.dynamic-width').forEach(function(input) {
+        adjustWidth(input);
+    });
+    window.onload = function() {
+    const confetti = document.querySelector('.confetti');
+
+    // Make the confetti pieces fade out and disappear after 5 seconds
+    setTimeout(() => {
+        confetti.classList.add('hidden');
+    }, 2000);
+};
+
+</script>
+
+{% endblock %}

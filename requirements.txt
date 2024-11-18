@@ -1,0 +1,16 @@
+Flask
+Flask-Session
+Werkzeug
+Pillow
+numpy
+matplotlib
+Flask-SQLAlchemy
+itsdangerous
+Flask-Mail
+cryptography
+cs50
+requests
+spotipy
+spotifysearch
+cryptography
+rapidfuzz

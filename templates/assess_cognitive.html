@@ -1,0 +1,187 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+<div style="flex: 10; display: flex; flex-direction: column; align-items: center;">
+        <form method="post" action="/assess_tut" style="position: absolute; left:5px;">
+            <button class="btn2" type="submit" style=" background: none; border: none;">
+                <h2>❔</h2>
+            </button>
+        </form>
+        <p style="position: absolute; padding-top: 50px; left:5px; background: none; border: none; z-index: 2; cursor: pointer; text-align: left; margin-left: 7px;">
+            مساعدة
+        </p>
+</div>
+
+
+<div class="progress-bar-container" id="f">
+    <div class="step" id="step1">
+        <span>1</span>
+        <div class="label">اسم المستخدم و كلمة المرور</div>
+    </div>
+    <div class="step" id="step2">
+        <span>2</span>
+        <div class="label">معلومات عن الطفل</div>
+    </div>
+    <div class="step" id="step3">
+        <span>3</span>
+        <div class="label">تقييم مستوى الطفل</div>
+    </div>
+</div>
+<style>
+    /* Adjust the button position for smaller screens */
+    @media (max-width: 768px) {
+        #f{
+            visibility: hidden;
+            height:1px;
+            display:none;
+
+        }
+        .progress-bar-container{
+            top:1px;
+        }
+        .button-form {
+            top:80px; /* Adjust the left position for smaller screens */
+        }
+        .button-form2{
+            top:80px;
+        }
+    }
+</style>
+<br>
+<div class="progress-bar-container">
+    <div class="substep" id="substep1">
+        <span>🏃‍♂️</span>
+        <div class="label">3-1 تقييم العمر الحركي</div>
+    </div>
+    <div class="substep" id="substep2">
+        <span>🗣</span>
+        <div class="label">3-2 تقييم العمر اللغوي</div>
+    </div>
+    <div class="substep" id="substep3">
+        <span>👥</span>
+        <div class="label">3-3 تقييم العمر الاجتماعية</div>
+    </div>
+    <div class="substep" id="substep4">
+        <span>🧠</span>
+        <div class="label">3-4 تقييم العمر الإدراكي</div>
+    </div>
+    <div class="substep" id="substep5">
+        <span>🍴</span>
+        <div class="label">3-5 تقييم عمر المساعدة الذاتية</div>
+    </div>
+</div>
+
+<script>
+    function setStep(currentStep) {
+        const steps = document.querySelectorAll('.step');
+        steps.forEach((step, index) => {
+            if (index < currentStep - 1) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else if (index === currentStep - 1) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active');
+                step.classList.remove('completed');
+            }
+        });
+    }
+
+    function setSubstep(currentSubstep) {
+        const substeps = document.querySelectorAll('.substep');
+        substeps.forEach((substep, index) => {
+            if (index < currentSubstep - 1) {
+                substep.classList.add('completed');
+                substep.classList.remove('active');
+            } else if (index === currentSubstep - 1) {
+                substep.classList.add('active');
+                substep.classList.remove('completed');
+            } else {
+                substep.classList.remove('active');
+                substep.classList.remove('completed');
+            }
+        });
+    }
+
+    // Get the current step from Flask
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentStep = {{ current_step }};
+        const currentSubstep = {{ current_substep }};
+        setStep(currentStep);
+        setSubstep(currentSubstep);
+    });
+</script>
+<br>
+<form method="post" action="/submit_cognitive" style="margin-right: auto;margin-left: auto; width:70%;display: flex; margin-top: 10px;">
+    <div style="text-align: right;">
+        <h1 style="margin: 0;">تقييم العمر الإدراكي 🧠</h1>
+        <h2 style="margin: 0;">{{data[-1].age}} سنوات</h2>
+    </div>
+    <button class="btn btn-primary"style="margin-left: 0;" type="submit" {% if not done %} disabled{% endif %}>
+        التالي 👈
+    </button>
+</form>
+<br>
+<p>اختر ✔️ اذا تمكن طفلك من المهارة</p>
+<p>اختر ⏹️ عند وجود بدايات للمهارة</p>
+<p>اختر ❌ اذا لم يتمكن طفلك من المهارة</p>
+<div style="width:100%; display: flex; justify-content: center;">
+    <form style="width: 70%" method="post" action="/save_cognitive">
+        <table class='table blended-table' style=" width:100%; border-color: black; background-color: rgba(255,255,255, 0.1);">
+            <tr>
+                <th>المهارة</th>
+                <th>التقييم</th>
+            </tr>
+            {% for i in data %}
+            {% if i.age[0]==child_age %}
+            <tr {%if i.scale>=0 %} style=" background-color: rgba(0,0,0, 0.1);"{%endif%}>
+                <td style="width:50%;"><strong>{{i.title}}-{{ i.performance }}</strong></td>
+                <td>
+                    <input type="hidden" name="performances[{{ loop.index0 }}][title]" value="{{ i.title }}">
+                    <input type="hidden" name="performances[{{ loop.index0 }}][age]" value="{{ child_age }}">
+                    <input type="hidden" name="performances[{{ loop.index0 }}][performance]" value="{{ i.performance }}">
+
+                    <label>
+                        <input type="radio" name="performances[{{ loop.index0 }}][scale]" value="2" {% if i.scale == 2 %}checked{% endif %} >
+                        <p>✔️</p>
+                    </label>
+                    <label>
+                        <input type="radio" name="performances[{{ loop.index0 }}][scale]" value="1" {% if i.scale == 1 %}checked{% endif %}>
+                        <p>⏹️</p>
+                    </label>
+                    <label>
+                        <input type="radio" name="performances[{{ loop.index0 }}][scale]" value="0" {% if i.scale == 0 %}checked{% endif %}>
+                        <p>❌</p>
+                    </label>
+
+                    <label>
+                        <div class="mb-3">
+                            <textarea name="performances[{{ loop.index0 }}][comment]" placeholder="ملاحظة" class="form-control" id="comment">{{i.comment}}</textarea>
+
+                       </div>
+                    </label>
+                </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+        </table>
+    <button class="btn btn-primary" type="submit">حفظ 📌</button>
+    </form>
+</div>
+<script>
+    function adjustWidth(input) {
+        input.style.width = (input.value.length + 1) + 'ch';
+    }
+
+    // If there's already a value in the input, adjust the width on page load
+    document.querySelectorAll('.dynamic-width').forEach(function(input) {
+        adjustWidth(input);
+    });
+</script>
+{% endblock %}
+

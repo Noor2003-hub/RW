@@ -1,0 +1,42 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    New Game
+{% endblock %}
+
+{% block main %}
+<style>
+    body {background-size: 100% 150%;}
+    </style>
+    <form action="/new" method="post">
+        <h2>Let's see how smart you are as a fan!</h4>
+        <h4> Search to add your favourite music artist(s):</h4>
+        <div  id="div4" class="button-container"><input style="margin: 0px 0px 0px 300px" type="text" name="artist" placeholder="artist">
+        <button style="margin: 0px 300px 0px 0px" class ="btn btn-primary" type="submit">Add</button></div> </form>
+    <table style= "width:100%; font-size:2vw; height:65px;">
+                        {% for name in fav_names %}
+                                {% if not name %}
+                                <tr><td><div id="div4"><h4><p id="artists"></p></h4></div></td></tr>
+                                {% else %}
+                                <tr><td><h4>{{name}} ✔</h4></td></tr>
+                                {% endif %}
+                        {% endfor %}</table>
+
+            <table align="center"><tr>
+            <form action="/my-link/">
+            <td><input class ="btn btn-primary" type="submit" value="Clear All" /></td></form>
+            <br><br><br>
+            <form action="/my-link2/">
+            <td><input class ="btn btn-primary" type="submit" name="randomly" value="Ready!" /></td></form>
+            </tr></table>
+        <script>
+            save_btn= document.querySelector(".btn-primary");
+            save_btn.onclick=function(){
+                this.innerHTML="<div class='loader'></div>";
+            }
+        </script>
+
+
+
+
+{% endblock %}

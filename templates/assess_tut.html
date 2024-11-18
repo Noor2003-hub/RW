@@ -1,0 +1,159 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    assess tutorial
+{% endblock %}
+
+{% block main %}
+<style>
+
+    figure {
+        display: inline-block;
+        margin: 10px;
+        text-align: center;
+    }
+
+
+    figcaption {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #555;
+    }
+
+
+
+        .tutorial-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 70%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .stepp {
+            margin-bottom: 30px;
+        }
+        .stepp h2 {
+            font-size: 24px;
+            color: #444;
+        }
+        .stepp p {
+            font-size: 16px;
+            color: #666;
+            width:70%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .stepp img {
+            width: 80%;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .step-count {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            font-size: 22px;
+            color: white;
+            background-color: #5a67d8;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+    </style>
+<form method="post" action="/login" style="position: absolute;
+    padding-top:0;
+    left: 20px;
+" >
+    <button class="btn btn-primary" type="submit">
+        العودة للتقييم
+    </button>
+</form>
+<style>
+
+@media (max-width: 768px) {
+    .headerr{
+        padding-top:60px;
+    }
+        #f{
+            visibility: hidden;
+            height:1px;
+            display:none;
+
+        }
+        .progress-bar-container{
+            top:1px;
+        }
+        .button-form {
+            top: -55px; /* Adjust the top position for smaller screens */
+            left: 5px; /* Adjust the left position for smaller screens */
+        }
+        .button-form2{
+            top: -10px; /* Adjust the top position for smaller screens */
+            left: 5px;
+        }
+    }
+</style>
+
+
+<h1 class="headerr">كيف أقيم مستوى طفلي؟</h1>
+<p>بعد إنشاء الحساب لطفلك, يجب تقييم عمر الطفل اللغوي, الإدراكي, الحركي, المخاطة الذاتية و المساعدة الذاتية <br> لتتمكن من الحصول على خطة تناسب مستوى طفلك<br> "ينصح بوجود الطفل اثناء التقييم"</p>
+
+<div class="tutorial-container">
+
+    <div class="stepp">
+
+        <h2>الخطوة ١: اقرأ المهارة واختبر طفلك فيها</h2>
+        <p>اقرأ المهارة و حاول ان تعرف ان كان الطفل متمكن من تلك المهارة ام لا, يمكنك مباشرة تقييم الطفل ان كنت تعرف مسبقا ان كان الطفل قد تمكن من تلك المهارة ام لا </p>
+    </div>
+
+    <!-- Step 2 -->
+<div class="stepp">
+
+    <h2>الخطوة ٢: اختر درجة التمكن من المهارة</h2>
+    <p>ان كان الطفل متمكن تماما من المهارة اختر ✔️, ان كان الطفل متمكن جزئيا من المهارة اختر ⏹️, ان لم يتمكن الطفل من المهارة اختر ❌</p>
+
+    <!-- First Image with Caption -->
+    <figure>
+        <img src="/static/2_1.png" alt="2_1">
+        <figcaption>مثال 1: طفلي يصعد السلم بتبادل القدمين بالتوالي </figcaption>
+    </figure>
+
+    <!-- Second Image with Caption -->
+    <figure>
+        <img src="/static/2_2.png" alt="2_2">
+        <figcaption>مثال 2: طفلي يصعد كل درجة من السلم بكلتى القدمين او بمساندة</figcaption>
+    </figure>
+
+    <!-- Third Image with Caption -->
+    <figure>
+        <img src="/static/2_3.png" alt="2_3">
+        <figcaption>مثال 3: طفلي يواجه صعوبة في المشي على السلم و تبديل الارجل</figcaption>
+    </figure>
+</div>
+
+    <!-- Step 3 -->
+    <div class="stepp">
+        <h2>الخطوة ٣: الملاحظة (اختياري)</h2>
+        <p>اضافة مفيدة في حال تم اخيار ⏹️ , لانها ستمكنك من تذكر اخر التطورات في تلك المهارة</p>
+        <img src="/static/3.gif" alt="3">
+
+    </div>
+
+    <!-- Step 4 -->
+    <div class="stepp">
+        <h2>الخطوة ٤: الحفظ 📌</h2>
+        <p>يجب حفظ التقييم قبل الانتقال للمرحلة التالية, يمكنك الحفظ لإكمال التقييم في وقت لاحق</p>
+    </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Correct!
+{% endblock %}
+
+{% block main %}
+    <div class="confetti">
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+      </div>
+<div> <h1> Congrats!</h1></div>
+
+<table align="center"><tr>
+{% for pic in fav_pics %}
+    <td><div id="gradient"><image  src="{{pic}}" style="width:150px;height:155px;"></div></td>
+{% endfor %}
+    </tr></table>
+<div> <h2>You have finished all posible titles for your artist(s) </h2></div>
+<div> <h1>with score: {{score}} Points!</h1></div>
+<p>you migh have not wrote every song for the artist(s) but you still count as winner</p>
+<p>Thank You!</p>
+<form action="/">
+<button class ="btn btn-primary" type="submit" name="again" value="next">play Again?</button>
+</form>
+
+{% endblock %}

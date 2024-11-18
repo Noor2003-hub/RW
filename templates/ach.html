@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Homepage
+{% endblock %}
+
+{% block main %}
+<table style="width:100%">
+    <tr>
+        <td style="width: 80%">
+            <div style="width:80%; margin-left: auto;
+  margin-right: auto; text-align: right">
+            <h2>الإنجازات 🏆</h2>
+            </div>
+        </td>
+        <td  style="width: 50%">
+            <div style="width: 80%; text-align: right">
+                <a href="/home" class="btn btn-primary">العودة 🏠︎</a>
+</div>
+        </td>
+    </tr>
+</table>
+{% if data %}
+<div style="width: 80%; margin-left: auto;
+  margin-right: auto; text-align: right">
+
+    <p>المهارات التي أكملتها مع طفلك:</p></div>
+<table id="myTable" class="blended-table" style="  margin-left: auto;
+  margin-right: auto; width: 80%;  background-color: rgba(255,255,255, 0.1);">
+
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>المهارة</th>
+                        <th>التقييم</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for i in data %}
+                    <tr style="width: 80%; background-color:
+                        {% if i.category == 'اللغة' %}
+                            rgba(179, 46, 49, 0.4);
+                        {% elif i.category == 'الإدراك' %}
+                            rgba(250, 208, 82, 0.4);
+                        {% elif i.category == 'الحركة' %}
+                            rgba(124, 184, 75, 0.4);
+                        {% elif i.category == 'المساعدة الذاتية' %}
+                            rgba(132, 165, 217, 0.4);
+                        {% elif i.category == 'المخالطة الاجتماعية' %}
+                            rgba(159, 103, 199, 0.4);
+                        {% endif %}
+                    ">
+                        <td style='width:10%;'><strong><h5>{{ loop.index }}</h5></strong></td>
+                        <td>
+                            <h3 class="card-title" style="display: inline; margin-right: 10px;">
+        {% if i.category == 'اللغة' %}🗣{% elif i.category == 'الإدراك' %}🧠{% elif i.category == 'الحركة' %}🏃‍♂️{% elif i.category == 'المساعدة الذاتية' %}🍴{% elif i.category == 'المخالطة الاجتماعية' %}👥{% endif %}
+    </h3>
+    <span style="font-size: 17px;">{{ i.category }}</span>
+                            <p class="card-text"><strong>العمر:</strong> {% if i.age == '0 – 1' %} منذ الولادة – 1 {% else %}{{ i.age }}{% endif %}</p>
+                            <div><strong>{{ i.title }} - {{ i.performance }}</strong>&nbsp;</div>
+                            <br>
+                            <button style="font-size: 15px;" class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#activities{{ loop.index }}" aria-expanded="false" aria-controls="activities{{ loop.index }}">
+                                أنشطة مقترحة
+                            </button>
+                            <div class="collapse" id="activities{{ loop.index }}">
+                                <ul class="list-group list-group-flush mt-2">
+                                    {% for activity in i.suggested_activities %}
+                                    <li class="list-group-item">{{ activity }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                        </td>
+                        <td style="width: 20%">
+                            ✔️<br>{{i.time}}
+
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+{% else %}
+<div style="width: 80%; margin-left: auto;
+  margin-right: auto; text-align: right">
+
+    <p>ستظهر هنا المهارات التي انجزتها مع طفلك من قائمة الأهداف.</p></div>
+{% endif %}
+{% endblock %}

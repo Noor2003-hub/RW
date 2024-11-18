@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Game
+{% endblock %}
+
+{% block main %}
+<form action="/game/" method="post">
+</div><div align="right"><font size="4">Score: {{score}} Points</font></div><br><br><div align="center"><h3>Write track title for {{artist[0]}} that starts with {{artist[2]}}</h3></font>
+    <br><br>
+    <table align="center">
+        <tr>
+            <td><div id="gradient">
+                <image  src="{{artist[1]}}" style="width:150px;height:155px;"><div class="text-block">{{artist[0]}}</div></div></td>
+
+            <td><div id="gradient2"><p style="font-size: 100px;">{{artist[2]}}</p></div></td>
+        </tr>
+    </table>
+<br>
+{% if not done %}
+    <table align="center">
+        <tr>
+            <td><input size="30" type="text" name="answer" placeholder="Track name"></td>
+            <td><button class ="btn btn-primary" type="submit">Check</button>
+            <script>
+                save_btn= document.querySelector(".btn-primary");
+                save_btn.onclick=function(){
+                    this.innerHTML="<div class='loader'></div>";
+                }
+            </script>
+        </td></tr>
+    </table></form>
+    {% else %}
+
+            <table align="center">
+            <tr><form action="/my-link2/">
+            <td></td></form>
+            <td><input size="20" type="text" name="answer" placeholder="Track name">
+            <button class ="btn btn-primary" type="submit">Check</button></td></form>
+        </tr>
+    </table>
+    {% endif %}
+    {% if score >20 %}
+
+        <form action="/my-link4/">
+            <button class ="btn btn-primary" type="submit">Skip?</button>
+            <script>
+                save_btn= document.querySelector(".btn-primary");
+                save_btn.onclick=function(){
+                    this.innerHTML="<div class='loader'></div>";
+                }
+            </script>
+        </form>
+        <p>* -25 points *</p>
+    {% endif %}
+
+{% endblock %}

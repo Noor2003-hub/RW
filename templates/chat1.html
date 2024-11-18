@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+{% block title %}
+    Chat with {{ recipient.name }}
+{% endblock %}
+{% block content %}
+<form method="post" action="{{ url_for('chat', recipient_id=recipient.id) }}" class="buttons">
+  <h3>Enter the Chat Room with {{ recipient.name }}</h3>
+  <div>
+    <label>Name:</label>
+    <input
+      type="text"
+      placeholder="Pick a name!"
+      name="name"
+      value="{{name}}"
+    />
+  </div>
+  <button type="submit" name="join">Start Chatting</button>
+  {% if error %}
+  <ul>
+    <li>{{error}}</li>
+  </ul>
+  {% endif %}
+</form>
+{% endblock %}

@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Register
+{% endblock %}
+
+{% block main %}
+
+<div class="progress-bar-container">
+    <div class="step" id="step1">
+        <span>1</span>
+        <div class="label">اسم المستخدم و كلمة المرور</div>
+    </div>
+    <div class="step" id="step2">
+        <span>2</span>
+        <div class="label">معلومات عن الطفل</div>
+    </div>
+    <div class="step" id="step3">
+        <span>3</span>
+        <div class="label">تقييم مستوى الطفل</div>
+    </div>
+
+</div>
+<script>
+    function setStep(currentStep) {
+        const steps = document.querySelectorAll('.step');
+        steps.forEach((step, index) => {
+            if (index < currentStep - 1) {
+                step.classList.add('completed');
+                step.classList.remove('active');
+            } else if (index === currentStep - 1) {
+                step.classList.add('active');
+                step.classList.remove('completed');
+            } else {
+                step.classList.remove('active');
+                step.classList.remove('completed');
+            }
+        });
+    }
+
+    // Get the current step from Flask
+    document.addEventListener('DOMContentLoaded', function() {
+        const currentStep = {{ current_step }};
+        setStep(currentStep);
+    });
+</script>
+<br>
+<div class="settings-container">
+    <form action="/setup" class="mb-3" id="loginForm" enctype="multipart/form-data" method="POST"style="width:50%; margin-left: auto; margin-right: auto;">
+    <div class="mb-3">
+            <input placeholder='اسم الطفل' class="form-control" type="text" id="child_name" name="child_name" required>
+        </div>
+
+    <div class="mb-3">
+            <select class="form-control" name="child_gender" id="child_gender" required>
+                <option value="" disabled selected>جنس الطفل</option>
+                <option value="male">ذكر</option>
+                <option value="female">انثى</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <select name="disability" id="disability" class="form-control" required>
+                <option value="" disabled selected>هل الطفل من ذوي الاحتياجات الخاصة؟</option>
+                <option value="yes">نعم</option>
+                <option value="no">لا</option>
+            </select>
+        </div>
+        <div class="mb-3">
+             <label for="date_of_birth">اختر تاريخ الميلاد:</label>
+            <input placeholder='Date of Birth' class="form-control" type="date" id="date_of_birth" name="date_of_birth" required>
+        </div>
+
+
+
+<br>
+        <div class="mb-3">
+            <label for="img">ارفع صورة للطفل (اختياري):</label>
+            <input type="file" class="form-control" name="img" id="img" onchange="previewImage(event)">
+            <div class="image-container" style="width: 150px; height: 150px;">
+            <img src="static/defult/img_1.png" alt="Child Image" id="child-img-preview" class="rounded-image"></div>
+        </div>
+        <div class="mb-3">
+           <button class="btn btn-primary" type="submit">التالي</button>
+        </div>
+</form>
+    <script>
+    function previewImage(event) {
+        const input = event.target;
+        const preview = document.getElementById('child-img-preview');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                preview.src = e.target.result;
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+            document.getElementById('loginForm').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent form submission on Enter
+
+                // Get all input fields in the form
+                const inputs = Array.from(this.querySelectorAll('input'));
+
+                // Get the current input being focused
+                const currentIndex = inputs.indexOf(document.activeElement);
+
+                // Move to the next input if not the last one
+                if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
+                    inputs[currentIndex + 1].focus();
+                } else {
+                    // If it's the last input, trigger form submission
+                    this.submit();
+                }
+            }
+        });
+</script>
+
+</div>
+{% endblock %}

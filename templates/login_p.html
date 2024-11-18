@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Log In
+{% endblock %}
+
+{% block main %}
+<h1>تسجيل الدخول لولي امر 👪</h1>
+<br>
+<div class="settings-container">
+    <form action="/login_p" method="post" id="loginForm">
+        <!-- Username input -->
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" id="username" name="username" placeholder="اسم المستخدم" type="text" required>
+        </div>
+
+        <!-- Password input -->
+        <div class="mb-3">
+            <input class="form-control mx-auto w-auto" id="password" name="password" placeholder="كلمة المرور" type="password" required>
+        </div>
+
+        <!-- Submit button -->
+        <button class="btn btn-primary" type="submit">تسجيل الدخول</button>
+    </form>
+
+    <script>
+        document.querySelector(".btn-primary").onclick = function() {
+            this.innerHTML = "<div class='loader'></div>";
+        }
+                document.getElementById('loginForm').addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault(); // Prevent form submission on Enter
+
+                // Get all input fields in the form
+                const inputs = Array.from(this.querySelectorAll('input'));
+
+                // Get the current input being focused
+                const currentIndex = inputs.indexOf(document.activeElement);
+
+                // Move to the next input if not the last one
+                if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
+                    inputs[currentIndex + 1].focus();
+                } else {
+                    // If it's the last input, trigger form submission
+                    this.submit();
+                }
+            }
+        });
+    </script>
+    <p class="mt-3">
+        <a href="/register">لا تملك حساب؟ انشئ حساب</a>
+    </p>
+    <p class="mt-3">
+        <a href="/forgot_password">نسيت كلمة المرور؟</a>
+    </p>
+<p class="mt-3">
+        <a href="/login_s">تسجيل الدخول كاخصائي؟</a>
+    </p>
+
+</div>
+{% endblock %}

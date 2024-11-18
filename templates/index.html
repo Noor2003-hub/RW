@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ar">
+
+<head>
+    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Play" />
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+
+    <!-- Bootstrap CSS -->
+    <link crossorigin="anonymous" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" rel="stylesheet">
+    <script crossorigin="anonymous" src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"></script>
+
+    <!-- Favicon -->
+    <link href="/static/mome.png" rel="icon">
+    <link href="/static/styles.css" rel="stylesheet">
+    <title>{% block title %}{% endblock %}</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+
+        body {
+
+            margin: 0;
+            padding: 0;
+            width: 100%;
+
+            overflow-x: hidden; /* Prevent horizontal scrolling */
+        }
+
+        .navbar {
+            min-width: 100%;
+            background-color: #2a9d8f;
+        }
+
+        .slideshow-container {
+            position: relative;
+            max-width: 100%;
+            margin: auto;
+            height: 500px;
+            overflow: hidden;
+        }
+
+        .mySlides {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s;
+        }
+
+        .mySlides img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .active {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body dir="rtl">
+    <!-- Navigation bar -->
+    <nav class="navbar navbar-expand-md navbar-dark custom-navbar">
+        <div class="container-fluid" dir="ltr">
+            <a class="navbar-brand d-flex align-items-center" href="/">
+                <img src="/static/m2.png" alt="Logo" style="height:90px; margin-right: 5px;">
+            </a>
+            <button aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler" data-bs-target="#navbar" data-bs-toggle="collapse" type="button">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbar" dir="rtl">
+                {% if session["user_id"] %}
+                    {% if session['user_type'] == 's' %}
+                        <ul class="navbar-nav ms-auto mt-2">
+                            <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/recent_chats' %}active{% endif %}" href="/recent_chats">📬 المحادثات</a></span></li>
+                            <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/settings' %}active{% endif %}" href="/settings">⚙️ الإعدادات</a></span></li>
+                            <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">🛈 عن التطبيق</a></span></li>
+                        </ul>
+                    {% elif session['user_type'] == 'p' %}
+                        <ul class="navbar-nav ms-auto mt-2">
+                            <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/home' %}active{% endif %}" href="/home">🏠︎ الصفحة الرئيسة</a></span></li>
+                            <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/view_development' %}active{% endif %}" href="/view_development">📈 التطورات</a></span></li>
+                            <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/search' %}active{% endif %}" href="/search">🔍 البحث</a></span></li>
+                            <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/contact' %}active{% endif %}" href="/contact">🩺 اخصائين</a></span></li>
+                            <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/recent_chats' %}active{% endif %}" href="/recent_chats">📬 المحادثات</a></span></li>
+                            <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/settings' %}active{% endif %}" href="/settings">⚙️ الإعدادات</a></span></li>
+                            <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">🛈 عن التطبيق</a></span></li>
+                        </ul>
+                    {% else %}
+                        <ul class="navbar-nav ms-auto mt-2">
+                            <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/admin' %}active{% endif %}" href="/admin">🏠︎ الصفحة الرئيسة</a></span></li>
+                            <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">🛈 عن التطبيق</a></span></li>
+                            <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/logout' %}active{% endif %}" href="/logout">↩ تسجيل خروج</a></span></li>
+                        </ul>
+                    {% endif %}
+                {% else %}
+                    <ul class="navbar-nav ms-auto mt-2">
+                        <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/register' %}active{% endif %}" href="/register">أنشاء حساب</a></span></li>
+                        <li class="nav-item"><span class="nav-box"><a class="nav-link {% if 'login' in request.path %}active{% endif %}" href="/login">تسجيل دخول</a></span></li>
+                        <li class="nav-item"><span class="nav-box"><a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">🛈 عن التطبيق</a></span></li>
+                    </ul>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+
+    <!-- Flash messages -->
+    {% if get_flashed_messages() %}
+        {% if 'تم' in get_flashed_messages()| join(" ") and not 'رصد' in get_flashed_messages()| join(" ") %}
+            <header>
+                <div class="alert alert-primary mb-0 text-center" style=" font-size:120%; background: #c2ffbf; color: #0a8a0a;" role="alert">
+                    {{ get_flashed_messages() | join(" ") }}
+                </div>
+            </header>
+        {% else %}
+            <header>
+                <div class="alert alert-primary mb-0 text-center" style=" font-size:120%; background: pink; color: #8A0A32;" role="alert">
+                    {{ get_flashed_messages() | join(" ") }}
+                </div>
+            </header>
+        {% endif %}
+    {% endif %}
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+
+        .zoom-img {
+    transition: transform 0.5s ease; /* Smooth transition */
+            /* Black border */
+}
+
+.zoom-img:hover {
+    transform: scale(1.1); /* Zoom in */
+}
+
+        .slideshow-container {
+            position: relative;
+            max-width: 100%;
+            margin: auto;
+            height: 500px; /* Set a fixed height for the slideshow */
+            overflow: hidden; /* Hide overflow to ensure all images are contained */
+        }
+
+        .mySlides {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 1.5s;
+        }
+
+        .mySlides img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Scale the image to cover the container while preserving aspect ratio */
+            animation: zoomInOut 5s ease-in-out infinite;
+        }
+
+        .active {
+            opacity: 1;
+        }
+        .sticker-img {
+            position: absolute;
+            bottom: 100px; /* Adjust as needed */
+            left: 100px; /* Adjust as needed */
+            height: 200px;
+            width: 300px;
+            z-index: 3;
+            display: none;
+        }
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none; /* Allows interaction with elements behind the overlay */
+            z-index: 1; /* Ensure the overlay is above the slideshow */
+            transition: background-color 0.5s ease; /* Smooth transition for opacity change */
+        }
+
+        .overlay-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 4rem;
+            text-align: center;
+            font-family: 'Tajawal', sans-serif;
+            padding: 100px 10px;
+            border-radius: 10px;
+            z-index: 2; /* Ensure text is above the overlay */
+            -webkit-text-stroke: 1px black;
+            text-shadow:
+                3px 3px 0 #000,
+                -1px -1px 0 #000,
+                1px -1px 0 #000,
+                -1px 1px 0 #000,
+                1px 1px 0 #000;
+        }
+
+        @keyframes zoomInOut {
+            0% {
+                transform: scale(1);
+            }
+            20% {
+                transform: scale(1.1);
+            }
+            80% {
+                transform: scale(1.1);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        @media only screen and (min-width: 900px) {
+            /* Show sticker image only on devices with a minimum width of 768px (desktops and tablets) */
+            .sticker-img {
+                display: block; /* Show the sticker image */
+            }}
+
+         @media only screen and (max-width: 900px) {
+        .overlay-text {
+            font-size:3em;
+            padding: 10px 10px;
+        }
+        }
+    </style>
+</head>
+<body>
+<div class="slideshow-container">
+    <div class="mySlides active">
+        <img src="/static/photo1.jpg" alt="Photo 1">
+    </div>
+    <div class="mySlides">
+        <img src="/static/Screenshot%202024-10-15%20204148.png" alt="Photo 2">
+    </div>
+    <div class="mySlides">
+        <img src="/static/photo3.png" alt="Photo 3">
+    </div>
+    <div class="mySlides">
+        <img src="/static/Taste-Our-Favorite-Kid-Friendly-Recipes-from-PBS-KIDS.jpg" alt="Photo 4">
+    </div>
+    <div class="mySlides">
+        <img src="/static/photo5.png" alt="Photo 5">
+    </div>
+    <div class="mySlides">
+        <img src="/static/photo6.png" alt="Photo 6">
+    </div>
+    <div class="mySlides">
+        <img src="/static/107367027-1706714409054-gettyimages-1010296120-fsa_8945.jpeg" alt="Photo 7">
+    </div>
+    <div class="mySlides">
+        <img src="/static/Co-parenting-blog-post-from-a-kids-perspective.jpg" alt="Photo 8">
+    </div>
+    <div class="mySlides">
+        <img src="/static/mom-kissing-child+(1).jpg" alt="Photo 9">
+    </div>
+    <div class="mySlides">
+        <img src="/static/Screenshot%202024-06-24%20011602.png" alt="Photo 10">
+    </div>
+    <div class="mySlides">
+        <img src="/static/parent-and-child-playi.jpg" alt="Photo 11">
+    </div>
+
+
+    <div class="overlay"></div>
+    <div class="overlay-text">معاً لتثقيف مقدمين الرعاية للأطفال</div>
+</div>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+        let slideIndex = 0;
+        const slides = document.getElementsByClassName("mySlides");
+        const totalSlides = slides.length;
+
+        function showSlides() {
+        Array.from(slides).forEach(slide => slide.classList.remove("active"));
+        slideIndex = (slideIndex % totalSlides) + 1;
+        slides[slideIndex - 1].classList.add("active");
+        setTimeout(showSlides, 5000); // Change image every 5 seconds
+    }
+
+        showSlides();
+
+        // Adjust overlay and text opacity based on scroll
+        document.addEventListener('scroll', function () {
+        const scrollPosition = window.scrollY;
+        const slideshowHeight = document.querySelector('.slideshow-container').clientHeight;
+        const overlay = document.querySelector('.overlay');
+        const overlayText = document.querySelector('.overlay-text');
+        const maxOverlayOpacity = 1.0; // Maximum opacity of the overlay
+        const maxTextOpacity = 1.0; // Maximum opacity of the text
+
+        // Calculate overlay opacity based on scroll position
+        let overlayOpacity = 0;
+        if (scrollPosition <= slideshowHeight) {
+        // Smoothly increase overlay opacity as we scroll
+        overlayOpacity = Math.min(scrollPosition / slideshowHeight, maxOverlayOpacity);
+    } else {
+        // When scrolling past the slideshow, set overlay opacity to 100%
+        overlayOpacity = maxOverlayOpacity;
+    }
+
+        // Smoothly adjust opacity
+        overlay.style.transition = 'background-color 0.1s ease-out';
+        overlay.style.backgroundColor = `rgba(239,196,107, ${overlayOpacity})`;
+
+        // Adjust overlay text opacity (fade out as scroll position increases)
+        const textOpacity = Math.max(1 - (scrollPosition / slideshowHeight), 0);
+        overlayText.style.transition = 'opacity 0.1s ease-out';
+        overlayText.style.opacity = textOpacity;
+    });
+    });
+</script>
+
+
+
+<img src="/static/sticker.png" class="sticker-img">
+</body>
+    <div class="content">
+        <main class="container-fluid py-5 text-center">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <h1 class="mb-4" style="font-weight: bold;">مرحباً بكم في
+
+                        <span style="color:#2a9d8f;">RiseWise</span></h1>
+                    <table style="width: 100%" dir="rtl">
+                        <tr>
+                            <td style="width: 60%">
+                                <div class="content" align="right">
+                                    <h3 class="lead">
+                                        <h2><strong> ما هو RiseWise؟</strong></h2>
+                                        <strong>RiseWise</strong> التربية بحكمة هو تطبيق ويب مصمم خصيصًا لمساعدة الآباء
+                                        والمعلمين في متابعة وتطوير مهارات الأطفال من سن الولادة إلى 5 سنوات (أو إلى 7
+                                        سنوات في حال كان الطفل من ذوي الاحتياجات الخاصة) بطريقة منهجية وشاملة. يهدف هذا
+                                        التطبيق إلى توفير دعم مخصص وربط العائلات بالخبراء لضمان نمو الأطفال وتطورهم
+                                        بنجاح.
+                                        <h2><strong> كيف يعمل RiseWise؟</strong></h2>
+                                        لأن طفلك يحتاج إلى المهارات في جميع المجالات الحركية, اللغوية, الإدراكية, مهارات
+                                        المساعدة الذاتية, و المهارات الاجتماعية. يساعدك موقعنا على تقيم مستوى طفلك في كل
+                                        من تلك المجالات و تعرف على المهارات التي تنقص طفلك, حينها يمكنك الإطلع على
+                                        الأنشطة الممكنة ليكتسب طفلك المهارات التي يحتاجها.
+                                        <p>في حال أردت البحث عن مهارة محددة و كيفية إكساب الطفل تلك المهارة بدلاً من
+                                            تقيم الطفل كلياً, يمكنك الضغط على البحث في الصندوق المقابل.</p>
+                                    </h3>
+                                </div>
+
+                            </td>
+                            <td>
+                                <div class="content" align="top">
+                                    <div class="image-container"
+                                         style="border: 3px solid #000;border-radius: 0%; width:100%; height: 100%; position: relative; margin: auto; overflow: hidden;">
+                    <img src="/static/search.jpg" class="zoom-img" style="width:100%; height: auto; border-radius: 0;" alt="Search Image">
+                    <div style=" position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: white; font-size: 100%; text-align: center; font-family: 'Tajawal', sans-serif; padding: 2px 2px; z-index: 2; text-shadow: 2px 2px 0 #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000, 1px 1px 0 #000;">
+                        هل تبحث عن طريقة لتعليم طفلك مهارة محددة؟
+                        <a href="{{ url_for('search')}}" style="text-decoration: none;"><button href="{{ url_for('search') }}" class="btn btn-primary" type="button" data-bs-toggle="collapse">بحث</button></a>
+                    </div>
+                </div>
+
+                            </div>
+                            <h1>
+                                <br>
+                            </h1>
+
+                        </td>
+
+                    </tr>
+                    <tr>
+                                <td style="width: 50%">
+
+
+                        </td>
+                        <td>
+
+                        </td>
+                    </tr>
+                </table>
+
+                <style>
+                .card-container {
+                    display: flex;
+                    flex-wrap: wrap;
+                    gap: 20px;
+                    justify-content: flex-start;
+                }
+
+                .content {
+                    text-align: right;
+                }
+
+                .card {
+                    height: 200px; /* Set a fixed height for all cards */
+                    width: 200px;
+                    background-color: rgba(255, 255, 255, 0.6);
+                    background-size: cover; /* Ensure the background covers the entire card */
+                    background-position: center; /* Center the background image */
+                    border-radius: 10px;
+                    padding: 15px;
+                    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+                    position: relative;
+                    color: #333;
+                    margin: 10px;
+                    overflow: hidden;
+                    vertical-align: top;
+                    transition: transform 0.3s;
+                }
+
+                .card::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background-color: rgba(255, 255, 255, 0.8);
+                    z-index: 1;
+                }
+
+                .card h4, .card p {
+                    position: relative;
+                    z-index: 2;
+                    font-size: 100%;
+                }
+
+                .card:hover {
+                    transform: translateY(-5px);
+                }
+
+                .card:nth-child(5), .card:nth-child(6), .card:nth-child(7) {
+                    width: 200px; /* Adjust 3 cards in second row */
+                }
+
+                /* Red circle with image */
+                /* Red circle with shadow effect */
+                .red-circle {
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    width: 50px;
+                    height: 50px;
+
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 300000;
+                }
+
+
+
+                .red-circle img {
+                    width: 90%; /* Adjust size of the image inside the circle */
+                    height: 90%;
+
+                    object-fit: contain;
+                }
+                .hh{
+                    right:30px;
+                    width:90%;
+                }
+
+                </style>
+
+
+                <div class="content" align="right">
+                    <h2><strong>هدفنا:</strong></h2>
+
+                    <div class="card-container" style="width:110%;">
+
+                        <div class="card" style="background-image: url('/static/c1.png');">
+                            <div class="red-circle">
+                                <img src="/static/small-image1.png" alt="Small Image">
+                            </div>
+                            <h4 class="hh"><strong>ضمان راحة البال للآباء:</strong></h4>
+                            <p>من خلال توفير إرشادات واضحة ومنهجية لتعليم الأطفال المهارات الأساسية.</p>
+
+                        </div>
+
+                        <div class="card" style="background-image: url('/static/c1.png');">
+                            <div class="red-circle">
+                                <img src="/static/small-image2.png" style="width:105%; height:105%; padding-top:10px;" alt="Small Image">
+                            </div><h4 class="hh"><strong>ضمان تغطية احتياجات الطفل بالكامل:</strong></h4>
+                            <p>تقديم خطط تطوير مخصصة بناءً على تقييم دقيق لمستوى تطور الطفل.</p>
+                        </div>
+
+                        <div class="card" style="background-image: url('/static/c1.png');">
+                            <div class="red-circle">
+                                <img src="/static/small-image3.png" alt="Small Image">
+                            </div>
+                            <h4 class="hh"><strong>مراعاة ذوي الاحتياجات الخاصة:</strong></h4>
+                            <p>معاونة الأباء للأطفال ذوي الاحتياجات الخاصة.</p>
+                        </div>
+
+                        <div class="card" style="background-image: url('/static/c1.png');">
+                            <div class="red-circle">
+                                <img src="/static/small-image4.png" alt="Small Image">
+                            </div>
+                            <h4 class="hh"><strong>اكتشاف الخلل لدى الطفل ان وجد:</strong></h4>
+                            <p>من خلال تحليل و مراقبة تطورات الطفل, من الممكن الكشف عن وجود معيق لنمو الطفل.</p>
+                        </div>
+
+                        <div class="card" style="background-image: url('/static/c1.png');">
+                            <div class="red-circle">
+                                <img src="/static/small-image5.png" alt="Small Image">
+                            </div>
+                            <h4 class="hh"><strong>تسهيل التواصل مع الخبراء:</strong></h4>
+                            <p>تمكين الآباء من طلب الاستشارات والتوجيهات من المختصين من خلال التطبيق.</p>
+                        </div>
+
+                        <div class="card" style="background-image: url('/static/c1.png');">
+                            <div class="red-circle">
+                                <img src="/static/small-image6.png" style="width:150%; height:150%; padding-top:10px; padding-right: 4px;"  alt="Small Image">
+                            </div>
+                            <h4 class="hh"  style="width:80%"><strong>تحسين الدعم الأسري وفهم احتياجات الطفل:</strong></h4>
+                            <p>مساعدة العائلات على التفاعل بشكل أفضل بناءً على فهم الطفل في كل مرحلة من مراحل نموه.</p>
+                        </div>
+
+                        <div class="card" style="background-image: url('/static/c1.png');">
+                            <div class="red-circle">
+                                <img src="/static/small-image7.png" alt="Small Image">
+                            </div>
+                            <h4 class="hh"  style="padding-bottom: 10px"><strong>الوصول إلى الجميع:</strong></h4>
+                            <p>جعل التطبيق متاحًا لأي شخص يسعى لتعليم الأطفال ، سواء كانوا آباءً، مقدمي رعاية، معلمين، أو متخصصين.</p>
+                        </div>
+                    </div>
+                </div>
+
+
+
+                    </div>
+                </div>
+
+                <br>
+                <div style="background-color: #f9f9f9; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 30px; width:60%; margin: auto; border-radius: 15px; ">
+                    <h2 style="text-align: center; background-color:#2a9d8f; line-height: 2; margin-bottom: 20px;"><strong>احصل الآن على خطة شاملة لتطوير طفلك 👇</strong></h2>
+                    <ul style="list-style-type: none; padding: 0; text-align: right; line-height: 1.8;">
+                        <li style="margin-bottom: 15px;"><h4 style="color: #333;">• ✅ خطة مخصصة لطفلك في جميع الجوانب: المساعدة الذاتية - الإدراك - الحركة - اللغة - المخالطة الاجتماعية</h4></li>
+                        <li style="margin-bottom: 15px;"><h4 style="color: #333;">• ✅ تتبع تطور الطفل</h4></li>
+                        <li style="margin-bottom: 15px;"><h4 style="color: #333;">• ✅ مخطط بياني يوضح تطور الطفل على مدار الوقت</h4></li>
+                        <li style="margin-bottom: 15px;"><h4 style="color: #333;">• ✅ استشارات طبية من الأخصائيين</h4></li>
+                        <li style="margin-bottom: 15px;"><h4 style="color: #333;">• ✅ مجاني</h4></li>
+                    </ul>
+                    <div style="text-align: center; margin-top: 30px;">
+                        <a href="{{ url_for('register') }}" style="text-decoration: none;">
+                            <button class="btn btn-primary" style="background-color: #2a9d8f; border: none; padding: 15px 30px; border-radius: 50px; font-size: 18px; font-family: 'Cairo', sans-serif;">إنشاء حساب</button>
+                        </a>
+                    </div>
+                </div>
+    </main></div>
+    <!-- Footer -->
+    <footer class="mb-5 small text-center text-muted">
+        جميع البيانات من قبل <a href="http://www.gulfkids.com/ar/index.php?action=show_res&r_id=27&topic_id=628">البرنامج المنزلي بورتاج</a>
+    </footer>
+
+</body>
+
+</html>

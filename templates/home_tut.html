@@ -1,0 +1,168 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    home tutorial
+{% endblock %}
+
+{% block main %}
+<style>
+    @media (max-width: 680px){
+        .btn-primary{
+            font-size: 50%;
+            margin-top: -50%;
+       .tutorial-container {
+    max-width:100%;
+}
+            figure{
+                width:100%;
+            }
+        }
+        .hh{
+            margin-top:15%;
+        }
+        .b{
+
+       position: absolute;
+        margin-left:0%;
+            margin-top:-15%;
+
+    }
+        .stepp img {
+            width: 100%;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+    }
+    .b{
+       position: absolute;
+        margin-right:80%;
+    }
+    .btn-primary{
+            font-size: 100%;}
+    figure {
+        display: inline-block;
+        margin: 10px;
+        text-align: center;
+    }
+
+
+    figcaption {
+        margin-top: 5px;
+        font-size: 14px;
+        color: #555;
+    }
+
+
+
+        .tutorial-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            max-width: 70%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .stepp {
+            margin-bottom: 30px;
+        }
+        .stepp h2 {
+            font-size: 24px;
+            color: #444;
+        }
+        .stepp p {
+            font-size: 16px;
+            color: #666;
+            width:70%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .stepp img {
+            width: 80%;
+            height: auto;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            margin-top: 10px;
+        }
+        .step-count {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            font-size: 22px;
+            color: white;
+            background-color: #5a67d8;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+    </style>
+<div class="containerr" style="gap:10%;">
+    <div class="b">
+<form method="post" action="/home">
+    <button class="btn btn-primary" type="submit">
+        العودة للصفحة الرئيسية
+    </button>
+</form>
+</div>
+
+
+<h1 class="hh">كيف أعمل على قائمة الاهداف؟</h1>
+</div>
+<p style="padding-top: 20px;">قائمة الاهداف تحتوي على المهارات الناقصة التي يحتاجها الطفل في عمره, يجب ان تعلم طفلك جميع تلك المهارات.</p>
+
+<div class="tutorial-container">
+
+    <div class="stepp">
+
+        <h2>الخطوة ١: إختر مهارة من القائمة لتعلمها لطفلك</h2>
+        <p>اقرأ المهارات في قائمة الاهداف حاول اختيار مهارة أو مجموعة من المهارات لتكن هدفك لليوم. <br> يفضل اختيار المهارات ذات الاولوية الأعلى. </p>
+        <figure>
+            <img src="/static/s1.png" alt="1">
+            <figcaption>المهارة رقم #1 ذات اولوية أعلى من المهارة رقم #2</figcaption>
+        </figure>
+    </div>
+
+    <!-- Step 2 -->
+<div class="stepp">
+    <h2>الخطوة ٢: إطلع على الأنشطة المقترحة</h2>
+    <p>لكل مهارة ستجد قائمة من الأنشطة المقترحة التي من خلال تنفيذها مع الطفل سيكتسب تلك المهارة, ليس عليك بتنفيذ جميع الانشطة دوماً, بل ربما أحد الأنشطة المذكورة تكفي لتعليم الطفل.</p>
+    <!-- First Image with Caption -->
+    <figure>
+        <img src="/static/s2.gif" alt="2">
+    </figure>
+
+</div>
+
+    <!-- Step 3 -->
+    <div class="stepp">
+        <h2>الخطوة ٣: الملاحظة (اختياري)</h2>
+        <p>يمكنك كتابة جميع التطورات في تلك المهارة</p>
+        <figure>
+            <img src="/static/s3.gif" alt="3_1">
+        </figure>
+
+    </div>
+
+    <!-- Step 4 -->
+    <div class="stepp">
+        <h2>الخطوة ٤: التأكيد </h2>
+        <p>يجب التأكيد على كل مهارة في حال تغيير تقيمها او الملاحظات, في حال تأكيد المهارة على العلامة ✔️ يتم إضافتها لقائمة الإنجازات 🏆</p>
+        <figure>
+            <img src="/static/s3_2.gif" alt="3_1">
+            <figcaption>في حال إكمال المهارة تماماً</figcaption>
+        </figure>
+        <figure><img src="/static/s3_1.gif" alt="3_2">
+            <figcaption>في حال إكمال جزء من المهارة</figcaption>
+        </figure>
+    </div>
+
+</div>
+
+{% endblock %}

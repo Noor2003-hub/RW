@@ -1,0 +1,8 @@
+[console_scripts]
+camel_arclean = camel_tools.cli.camel_arclean:main
+camel_data = camel_tools.cli.camel_data:main
+camel_dediac = camel_tools.cli.camel_dediac:main
+camel_diac = camel_tools.cli.camel_diac:main
+camel_morphology = camel_tools.cli.camel_morphology:main
+camel_transliterate = camel_tools.cli.camel_transliterate:main
+camel_word_tokenize = camel_tools.cli.camel_word_tokenize:main
