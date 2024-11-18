@@ -448,7 +448,9 @@ ParentGuide '''
         print('cant send msg')
 def send_email2(user):
     child=db.execute('select * from children where user_id=?',session['user_id'])[0]
-    msg = Message(f'تهانينا بمناسبة عيد ميلاد {child['name']} وافتتاح فئة عمرية جديدة! 🥳🎊', sender='your-email@example.com', recipients=[user['email']])
+    child_name=child['name']
+    child_age=display_age(child['dob'])
+    msg = Message(f'تهانينا بمناسبة عيد ميلاد {child_name} وافتتاح فئة عمرية جديدة! 🥳🎊', sender='your-email@example.com', recipients=[user['email']])
     name=user['username']
     msg.body = f'''مرحبًا {name}،
 
@@ -458,7 +460,7 @@ def send_email2(user):
 
 نحن متحمسون لرؤية طفلكم وهو يستمتع بتجربة هذه المهارات الجديدة، ونأمل أن تكونوا مستعدين للانضمام إلينا في هذا المشوار الممتع والمفيد.
 
-لمزيد من التفاصيل حول الفئة الجديدة والمهارات المتاحة، يمكنكم زيارة التطبيق والاطلاع على القسم الجديد المخصص لعمر وإتمامه {display_age(child['dob'])}. كما يسعدنا تلقي استفساراتكم واقتراحاتكم في أي وقت.
+لمزيد من التفاصيل حول الفئة الجديدة والمهارات المتاحة، يمكنكم زيارة التطبيق والاطلاع على القسم الجديد المخصص لعمر وإتمامه {child_age}. كما يسعدنا تلقي استفساراتكم واقتراحاتكم في أي وقت.
 
 شكرًا لثقتكم المستمرة بنا ونتطلع إلى مزيد من النجاحات معكم ومع أطفالكم الأعزاء.
 
@@ -470,16 +472,19 @@ ParentGuide '''
         print('cant send msg')
 def send_email3(user):
     msg = Message(f'تم قبول الانضمام الى موقعنا', sender='your-email@example.com', recipients=[user['email']])
-    msg.body = f'''مرحبًا {user['name']}،
+    user_name=user['name']
+    login_link=url_for('login', _external=True)
+    index_link=url_for('index', _external=True)
+    msg.body = f'''مرحبًا {user_name}،
 تم قبولك في طاقم عمل موقعنا parentguide
 
 يمكنك الان تسجيل الدخول من هنا:
-{url_for('login', _external=True)}
+{login_link}
 
 وسوف تتمكن من استخدام الموقع و الرد على أسئلة المستخدمين فيما يتعلق بالأطفال
 
 أو يمكنك زيارة موقعنا:
-{url_for('index', _external=True)}
+{index_link}
 
 مع تحيات فريق ParentGuide
 '''
@@ -491,11 +496,13 @@ def send_email3(user):
 def send_email4(specialist):
     user = db.execute('SELECT * FROM users WHERE id=?', session['user_id'])[0]
     msg = Message(f' لديك رسالة جديدة 📩', sender='your-email@example.com', recipients=[specialist['email']])
-    msg.body = f'''مرحبًا {specialist['name']}،
+    specialist_name=specialist['name']
+    linkk=url_for('chat', recipient_id=user['id'], _external=True)
+    msg.body = f'''مرحبًا {specialist_name}،
 
 وصلتك رسالة جديدة من احد مستخدمين موقعنا PartenGuide
 
-الرجاء الدخول للرد على الرسالة: {url_for('chat', recipient_id=user['id'], _external=True)}
+الرجاء الدخول للرد على الرسالة: {linkk}
 
 مع تحيات فريق ParentGuide
 '''
@@ -506,11 +513,14 @@ def send_email4(specialist):
 def send_email5(user):
     specialist = db.execute('SELECT * FROM specialist WHERE id=?', session['user_id'])[0]
     msg = Message(f' لديك رسالة جديدة 📩', sender='your-email@example.com', recipients=[user['email']])
-    msg.body = f'''مرحبًا {user['username']}،
+    name1=user['username']
+    name2=specialist['name']
+    linkk=url_for('chat', recipient_id=specialist['id'], _external=True)
+    msg.body = f'''مرحبًا {name1}،
 
-وصلتك رسالة جديدة من {specialist['name']}
+وصلتك رسالة جديدة من {name2}
 
-الرجاء الدخول للاطلاع على الرسالة: {url_for('chat', recipient_id=specialist['id'], _external=True)}
+الرجاء الدخول للاطلاع على الرسالة: {linkk}
 
 مع تحيات فريق ParentGuide
 '''
