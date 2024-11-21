@@ -6,7 +6,7 @@
 
 {% block main %}
 <div style="flex: 10; display: flex; flex-direction: column; align-items: center;">
-        <form method="post" action="/assess_tut" style="position: absolute; left:5px;">
+        <form method="post" action="/assess_tut" style="position: absolute; left:5px; z-index:100">
             <button class="btn2" type="submit" style=" background: none; border: none;">
                 <h2>❔</h2>
             </button>
@@ -131,24 +131,31 @@
 <p>اختر ❌ اذا لم يتمكن طفلك من المهارة</p>
 
 
+
 <div style="width:100%; display: flex; justify-content: center;">
     <form style="width: 70%" method="post" action="/save_lang">
-        <table class='table blended-table' style=" width:100%; border-color: black; background-color: rgba(255,255,255, 0.1);">
+        <table class='table blended-table' style="width:100%; border-color: black; background-color: rgba(255,255,255, 0.1);">
             <tr>
+                <th>رقم المهارة</th>
                 <th>المهارة</th>
                 <th>التقييم</th>
             </tr>
             {% for i in data %}
-            {% if i.age[0]==child_age %}
-            <tr {%if i.scale>=0 %} style=" background-color: rgba(0,0,0, 0.1);"{%endif%}>
-                <td style="width:50%;"><strong>{{i.title}}-{{ i.performance }}</strong></td>
+            {% if i.age[0] == child_age %}
+            <tr {% if i.scale >= 0 %} style="background-color: rgba(0,0,0, 0.1);" {% endif %}>
+                <td style="text-align: center; width: 10%;">
+                    <strong>{{ i.title }}</strong>
+                </td>
+                <td style="width: 40%;">
+                    <strong>{{ i.performance }}</strong>
+                </td>
                 <td>
                     <input type="hidden" name="performances[{{ loop.index0 }}][title]" value="{{ i.title }}">
                     <input type="hidden" name="performances[{{ loop.index0 }}][age]" value="{{ child_age }}">
                     <input type="hidden" name="performances[{{ loop.index0 }}][performance]" value="{{ i.performance }}">
 
                     <label>
-                        <input type="radio" name="performances[{{ loop.index0 }}][scale]" value="2" {% if i.scale == 2 %}checked{% endif %} >
+                        <input type="radio" name="performances[{{ loop.index0 }}][scale]" value="2" {% if i.scale == 2 %}checked{% endif %}>
                         <p>✔️</p>
                     </label>
                     <label>
@@ -162,18 +169,18 @@
 
                     <label>
                         <div class="mb-3">
-                            <textarea name="performances[{{ loop.index0 }}][comment]" placeholder="ملاحظة" class="form-control" id="comment">{{i.comment}}</textarea>
-
-                       </div>
+                            <textarea name="performances[{{ loop.index0 }}][comment]" placeholder="ملاحظة" class="form-control" id="comment">{{ i.comment }}</textarea>
+                        </div>
                     </label>
                 </td>
             </tr>
             {% endif %}
             {% endfor %}
         </table>
-    <button class="btn btn-primary" type="submit">حفظ 📌</button>
+        <button class="btn btn-primary" type="submit">حفظ 📌</button>
     </form>
 </div>
+
 <script>
     function adjustWidth(input) {
         input.style.width = (input.value.length + 1) + 'ch';

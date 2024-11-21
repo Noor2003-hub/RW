@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 from datetime import datetime
 from werkzeug.security import check_password_hash, generate_password_hash
 from helpers import display_age, div,filter_data
-
+from collections import defaultdict
 from PIL import Image, UnidentifiedImageError
 import numpy as np
 from difflib import SequenceMatcher
@@ -2228,39 +2228,108 @@ def index():
     return render_template("index.html")
 
 
+
+
 @app.route("/search", methods=["GET", "POST"])
 def search():
     if request.method == "POST":
-        search_query = request.form.get("search_query", "")
-        selected_age = request.form.get("age", "")
-        selected_category = request.form.get("category", "")
-        search_words = search_query.strip().lower().split()
-        similarity_threshold = 90
+        search_query = request.form.get("search_query", "").strip().lower()
+        selected_age = request.form.get("age", "").strip()
+        selected_category = request.form.get("category", "").strip()
+
+        # Tokenize and preprocess the search query
+        search_words = search_query.split()
+        similarity_threshold = 80  # Flexible threshold for matching
         results = []
+
         for category, items in data.items():
             for item in items:
                 performance_text = item["performance"].lower()
+                item_age = item.get("age", "N/A")
                 similarity_score = 0
+
+                # Calculate similarity if search query is present
                 if search_words:
-                    for search_word in search_words:
-                        similarity_score = max(similarity_score, fuzz.partial_ratio(search_word, performance_text))
-                if search_query:
-                    if (similarity_score >= similarity_threshold) and (not selected_age or selected_age in item.get("age", "")) and \
-                            (not selected_category or selected_category == category):
-                        results.append({"category": category, "title": item["title"],"age": item.get("age", "N/A"),
-                            "performance": item["performance"],"suggested_activities": item["suggested_activities"],"similarity_score": similarity_score
-                        })
-                else:
-                    if (not selected_age or selected_age in item.get("age", "")) and (not selected_category or selected_category == category):
-                        results.append({"category": category,"title": item["title"],"age": item.get("age", "N/A"),
-                            "performance": item["performance"],"suggested_activities": item["suggested_activities"],"similarity_score": similarity_score
-                        })
+                    similarity_score = sum(fuzz.partial_ratio(word, performance_text) for word in search_words) / len(
+                        search_words)
+
+                # Match conditions
+                is_query_matched = similarity_score >= similarity_threshold if search_query else True
+                is_age_matched = not selected_age or selected_age in item_age
+                is_category_matched = not selected_category or selected_category == category
+
+                # Append matching results
+                if is_query_matched and is_age_matched and is_category_matched:
+                    results.append({
+                        "category": category,
+                        "title": item["title"],
+                        "age": item_age,
+                        "performance": item["performance"],
+                        "suggested_activities": item["suggested_activities"],
+                        "similarity_score": similarity_score
+                    })
+
+        # Sort results by similarity score for better presentation
         results.sort(key=lambda x: x["similarity_score"], reverse=True)
+
+        # If no search query and no matches, return all performances in selected filters
+        if not search_query and not results:
+            for category, items in data.items():
+                if not selected_category or selected_category == category:
+                    for item in items:
+                        if not selected_age or selected_age in item.get("age", "N/A"):
+                            results.append({
+                                "category": category,
+                                "title": item["title"],
+                                "age": item.get("age", "N/A"),
+                                "performance": item["performance"],
+                                "suggested_activities": item["suggested_activities"],
+                                "similarity_score": 0
+                            })
+
+        # If no filters are applied and no search query, show all performances
         if not results:
-            results = 'لا يوجد نتائج'
-        return render_template("search.html", results=results, search_query=search_query, selected_age=selected_age,selected_category=selected_category, data=data)
+            for category, items in data.items():
+                for item in items:
+                    results.append({
+                        "category": category,
+                        "title": item["title"],
+                        "age": item.get("age", "N/A"),
+                        "performance": item["performance"],
+                        "suggested_activities": item["suggested_activities"],
+                        "similarity_score": 0
+                    })
+
+        return render_template(
+            "search.html",
+            results=results,
+            search_query=search_query,
+            selected_age=selected_age,
+            selected_category=selected_category,
+            data=data
+        )
     else:
-        return render_template("search.html", results=[], search_query="", selected_age="", selected_category="", data=data)
+        # GET request: Show all performances
+        results = []
+        for category, items in data.items():
+            for item in items:
+                results.append({
+                    "category": category,
+                    "title": item["title"],
+                    "age": item.get("age", "N/A"),
+                    "performance": item["performance"],
+                    "suggested_activities": item["suggested_activities"],
+                    "similarity_score": 0
+                })
+
+        return render_template(
+            "search.html",
+            results=results,
+            search_query="",
+            selected_age="",
+            selected_category="",
+            data=data
+        )
 
 
 @app.route("/setup", methods=["GET", "POST"])
