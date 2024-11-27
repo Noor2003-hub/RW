@@ -5,7 +5,49 @@
 {% endblock %}
 
 {% block main %}
+<style>
+        .modal-content {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .modal-header {
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6); /* Subtle shadow for text clarity */
+    font-size: 1.8rem;
+    font-weight: bold;
+    border-radius: 8px; /* Slight rounding for smoothness */
+    padding: 10px;
+    width:auto;
+    background-color: white; /* Solid background */
+    color: #333; /* High contrast text */
+}
+    .list-group{
+       background-color: rgb(255,255,255,0.9);
+    }
 
+    .motion-bg {
+        background-image: url('/static/defult/motion.png');
+    }
+    .cognition-bg {
+        background-image: url('/static/defult/cognitive.png');
+    }
+
+    .language-bg {
+        background-image: url('/static/defult/language.png');
+    }
+
+    .selfcare-bg {
+        background-image: url('/static/defult/self_care.png');
+    }
+
+    .social-bg {
+        background-image: url('/static/defult/social.png');
+    }
+</style>
 <div class="container" style="display: flex; justify-content: center; z-index: 2; position: relative; width:100%;">
 
 
@@ -170,25 +212,37 @@
             أنشطة مقترحة
         </button>
 
-        <!-- Modal for Suggested Activities -->
-        <div class="modal fade" id="activitiesModal{{ loop.index }}" tabindex="-1" aria-labelledby="activitiesModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="activitiesModalLabel">أنشطة مقترحة</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body" id="activitiesModalBody{{ loop.index }}">
-                        <h6>{{ i.performance }}</h6>
-                        <ul class="list-group">
-                            {% for activity in i.suggested_activities %}
-                                <li class="list-group-item" style="background-color: rgb(255,255,255,0.3)">{{ activity }}</li>
-                            {% endfor %}
-                        </ul>
+       <!-- Modal for Suggested Activities -->
+            <div class="modal fade" id="activitiesModal{{ loop.index }}" tabindex="-1" aria-labelledby="activitiesModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content {% if i.category == 'الحركة' %}motion-bg{% elif i.category == 'الإدراك' %}cognition-bg{% elif i.category == 'اللغة' %}language-bg{% elif i.category == 'المساعدة الذاتية' %}selfcare-bg{% elif i.category == 'المخالطة الاجتماعية' %}social-bg{% endif %}">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="activitiesModalLabel">
+                                {% if i.category == 'اللغة' %}
+                                المهارة اللغوية
+                                {% elif i.category == 'الإدراك' %}
+                                المهارة الادراكية
+                                {% elif i.category == 'الحركة' %}
+                                المهارة الحركية
+                                {% elif i.category == 'المساعدة الذاتية' %}
+                                مهارة المساعدة الذاتية
+                                {% elif i.category == 'المخالطة الاجتماعية' %}
+                                مهارة المخالطة الاجتماعية
+                                {% endif %}
+                            </h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h6 class="modal-header">{{ i.title }} - {{ i.performance }}</h6>
+                            <ul class="list-group">
+                                {% for activity in i.suggested_activities %}
+                                <li class="list-group-item" style="background-color: rgba(255, 255, 255, 0.3)">{{ activity }}</li>
+                                {% endfor %}
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
 
                         </td>

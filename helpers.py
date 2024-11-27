@@ -29,6 +29,8 @@ from collections import defaultdict
 with open('cards.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 
+def is_english_letters(string):
+    return all('a' <= char.lower() <= 'z' for char in string if char.isalpha())
 
 def filter_data(time_range, organized_data):
     end_date = datetime.now().date()
