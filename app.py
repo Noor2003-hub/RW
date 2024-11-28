@@ -250,7 +250,7 @@ def cancle():
     approved=db.execute('select approved from specialist where id=?',id)
     img=db.execute('select img from specialist where id=?',id)[0]['img']
     cer = db.execute('select certificate from specialist where id=?', id)[0]['certificate']
-    if img!='static/unknown.png':
+    if img!='static/defult/unknown.png':
         try:
             os.remove(img)
         except:
@@ -339,7 +339,7 @@ def register2():
                 flash("الصورة الثانية ليست صورة صالحة.")
                 return redirect('/register2')
         else:
-            resized_path2 = 'static/unknown.png'
+            resized_path2 = 'static/defult/unknown.png'
         db.execute('insert into specialist (username, hash,email,name,spec,dob,grad_year,desc,certificate,img,request_date) values (?,?,?,?,?,?,?,?,?,?,?)',username.lower(),generate_password_hash(password),email,name,spec,datetime.strptime(date_of_birth, '%Y-%m-%d').date(),date_of_grad,desc,resized_path,resized_path2,datetime.now().date())
         flash('تم إنشاء حساب بنجاح. الرجاء انتظار بريد الكتروني بالموافقة للتمكن من استخدام حساب الاخصائي')
         return redirect("/")
@@ -2310,7 +2310,7 @@ def setup():
         # Save the user's registration data to the database
         temp_user = session.pop("temp_user")
         user_id = db.execute("INSERT INTO users (username, hash, email,img) VALUES(?, ?, ?,?)",
-                             temp_user["username"].lower(), generate_password_hash(temp_user["password"]),temp_user['email'],'static/unknown.png')
+                             temp_user["username"].lower(), generate_password_hash(temp_user["password"]),temp_user['email'],'static/defult/unknown.png')
         print(user_id)
         db.execute('update users set name=? where id=?','User_'+str(user_id),user_id)
         data = load_data()
