@@ -57,6 +57,7 @@ colors = [['rgb(255, 99, 132)', 'rgba(255, 99, 132, 0.5)'],
 
 # Initialize Flask app
 app = Flask(__name__)
+
 # Configure secret key for session and URL serialization
 app.config['SECRET_KEY'] = "9a12b12c5d76f47a5e3d4f2877b2c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b4"
 if not app.config['SECRET_KEY']:
