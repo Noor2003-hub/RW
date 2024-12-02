@@ -44,7 +44,7 @@ from flask_mail import Mail, Message
 import re
 from cryptography.fernet import Fernet
 from rapidfuzz import fuzz
-# Configure constantss
+# Configure constants
 MAX_FILE_SIZE = 2 * 1024 * 1024  # Max upload file size (2MB)
 ENCRYPTION_KEY = 'EE_TQZC1dolC7MvOufqONuIBscclbe8FuKJTQ6hcGPw='  # Encryption key
 UPLOAD_FOLDER = 'static/uploads/'  # Directory for uploaded files
