@@ -70,7 +70,6 @@
         </div>
         <button class="btn btn-primary" id="submitButton" type="submit" disabled>التالي</button>
     </form>
-    <!-- Terms and Conditions Modal -->
     <div class="modal fade" id="termsModal" tabindex="-1" aria-labelledby="termsModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -105,42 +104,58 @@
     </p>
 </div>
 <script>
-    function toggleSubmitButton() {
-            const termsCheckbox = document.getElementById('termsCheckbox');
-            const submitButton = document.getElementById('submitButton');
-            submitButton.disabled = !termsCheckbox.checked;
+    // Function to enable/disable the submit button based on whether the terms checkbox is checked
+function toggleSubmitButton() {
+    const termsCheckbox = document.getElementById('termsCheckbox'); // Get the checkbox element
+    const submitButton = document.getElementById('submitButton'); // Get the submit button element
+    submitButton.disabled = !termsCheckbox.checked; // Enable the button only when the checkbox is checked
+}
+
+// Add an event listener to the password input field to evaluate password strength dynamically
+document.getElementById('password').addEventListener('input', function() {
+    const password = this.value; // Get the current value of the password field
+    const strengthIndicator = document.getElementById('password-strength'); // Get the strength indicator element
+    let strength = 0;
+
+    // Check password length and increment strength
+    if (password.length >= 5) strength += 1;
+    // Check for the presence of at least one digit and increment strength
+    if (/\d/.test(password)) strength += 1;
+
+    let strengthText; // Define a variable for the password strength message
+    switch (strength) {
+        case 0:
+            // Weakest password: Too short and missing numbers
+            strengthText = '<span style="color:red;">ضعيفة جدا: كلمة المرور يجب أن تتكون من 5 حروف على الأقل وتحتوي على رقم واحد على الأقل</span>';
+            break;
+        case 1:
+            // Weak password: Missing either length or number
+            strengthText = '<span style="color:orange;">ضعيفة: كلمة المرور يجب أن تحتوي على رقم واحد على الأقل</span>';
+            break;
+        case 2:
+            // Strong password: Meets both criteria
+            strengthText = '<span style="color:green;">قوية</span>';
+            break;
+    }
+    // Update the strength indicator with the appropriate message
+    strengthIndicator.innerHTML = `${strengthText}`;
+});
+
+// Add an event listener to handle Enter key navigation between form fields
+document.getElementById('loginForm').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent default form submission
+        const inputs = Array.from(this.querySelectorAll('input')); // Get all input fields in the form
+        const currentIndex = inputs.indexOf(document.activeElement); // Find the currently focused input
+        if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
+            // Move focus to the next input field if available
+            inputs[currentIndex + 1].focus();
+        } else {
+            // Submit the form if the last input is focused
+            this.submit();
         }
-    document.getElementById('password').addEventListener('input', function() {
-        const password = this.value;
-        const strengthIndicator = document.getElementById('password-strength');
-        let strength = 0;
-        if (password.length >= 5) strength += 1;
-        if (/\d/.test(password)) strength += 1;
-        let strengthText;
-        switch (strength) {
-            case 0:
-                strengthText = '<span style="color:red;">ضعيفة جدا: كلمة المرور يجب أن تتكون من 5 حروف على الأقل وتحتوي على رقم واحد على الأقل</span>';
-                break;
-            case 1:
-                strengthText = '<span style="color:orange;">ضعيفة: كلمة المرور يجب أن تحتوي على رقم واحد على الأقل</span>';
-                break;
-            case 2:
-                strengthText = '<span style="color:green;">قوية</span>';
-                break;
-        }
-        strengthIndicator.innerHTML = `${strengthText}`;
-    });
-    document.getElementById('loginForm').addEventListener('keydown', function(event) {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            const inputs = Array.from(this.querySelectorAll('input'));
-            const currentIndex = inputs.indexOf(document.activeElement);
-            if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
-                inputs[currentIndex + 1].focus();
-            } else {
-                this.submit();
-            }
-        }
-    });
+    }
+});
+
 </script>
 {% endblock %}

@@ -1,34 +1,108 @@
-print(55)
-import csv
-from functools import wraps
-import datetime
-from flask import redirect, render_template, session
-import requests
-from spotifysearch.client import Client
-import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
-import csv
-
-import sqlite3
 import json
-from functools import wraps
 import datetime
-from flask import redirect, render_template, session
-import requests
-from spotifysearch.client import Client
-import spotipy
-from spotipy.oauth2 import SpotifyClientCredentials
-from difflib import SequenceMatcher
-from datetime import datetime
-cid = "6accb5d452554ee9af43586b7b95ab10"
-secret = "64fe5f741b444062afdf0aa4d3db7b4c"
-client_credentials_manager = SpotifyClientCredentials(client_id=cid, client_secret=secret)
-sp=spotipy.Spotify(client_credentials_manager=client_credentials_manager)
+from flask import session
 from datetime import datetime, timedelta
 from collections import defaultdict
 with open('cards.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 
+# Function to load data from JSON
+def load_data():
+    try:
+        with open('modified_cards.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+        return data
+    except Exception as e:
+        print(f"Error loading JSON file: {e}")
+        return None
+def save_data(filename, data):
+    try:
+        with open(filename, 'w', encoding='utf-8') as f:
+            json.dump(data, f, ensure_ascii=False, indent=4)
+        print(f"Modified JSON data saved to '{filename}'")
+    except Exception as e:
+        print(f"Error saving JSON file '{filename}': {e}")
+
+def check_session():
+    #print(session.get("user_id"))
+    if session.get("user_id") is not None:
+        return True
+    else:
+        return False
+# Function to calculate age from birthdate
+def calculate_age2(date_or_age_range):
+    if date_or_age_range == 'منذ الولادة – 1':
+        return 0
+    elif ' – ' in date_or_age_range:
+        try:
+            age_range = date_or_age_range.split(' – ')
+            return int(age_range[0])
+        except Exception as e:
+            print(f"Error parsing age range '{date_or_age_range}': {e}")
+            return None
+    else:
+        try:
+            # Handle the format "YYYY-MM-DD HH:MM:SS" or "YYYY-MM-DD"
+            if ' ' in date_or_age_range:
+                date_of_birth = datetime.strptime(date_or_age_range, "%Y-%m-%d %H:%M:%S")
+            else:
+                date_of_birth = datetime.strptime(date_or_age_range, "%Y-%m-%d")
+
+            today = datetime.today()
+            age = today.year - date_of_birth.year - (
+                    (today.month, today.day) < (date_of_birth.month, date_of_birth.day))
+            return age
+        except ValueError as e:
+            print(f"Error calculating age for '{date_or_age_range}': {e}")
+            return None
+
+# Function to filter performances by age
+def filter_by_age(data, age):
+    filtered_data = {}
+    for category, performances in data.items():
+        # for p in performances:
+        # print(p['age'],calculate_age2(p['age']),age)
+        filtered_data[category] = [p for p in performances if calculate_age2(p['age']) == age]
+    return filtered_data
+
+
+def create_age_ranges_structure(data, age_ranges):
+    age_ranges_data = {
+        age_range: {"المساعدة الذاتية": [], "اللغة": [], "المخالطة الاجتماعية": [], "الإدراك": [], "الحركة": []} for
+        age_range in age_ranges}
+
+    for category, items in data.items():
+        for item in items:
+            age = calculate_age2(item['age'])
+            if age is not None:
+                for age_range in age_ranges:
+                    lower, upper = map(int, age_range.split(' – '))
+                    if lower <= age < upper:
+                        # Check if the item is already in the list
+                        if not any(existing_item['title'] == item['title'] for existing_item in
+                                   age_ranges_data[age_range][category]):
+                            age_ranges_data[age_range][category].append(item)
+                        break
+
+    return age_ranges_data
+
+
+def filter_category_by_age(data, age):
+    filtered_data = []
+    for p in data:
+        if calculate_age2(p['age']) == int(age):
+            filtered_data.append(p)
+    return filtered_data
+def find_home():#return user to home according to user type
+    if not session: #if no user loged in= guest
+        return '/'
+    else:
+        if session['user_type']=='p':
+            return '/home'
+        elif session['user_type']=='s':
+            return '/recent_chats'
+        else:
+            return '/admin'
 def is_english_letters(string):
     return all('a' <= char.lower() <= 'z' for char in string if char.isalpha())
 
@@ -140,7 +214,7 @@ def display_age(birth_date):
     age_in_days = (current_date - birth_date).days
 
     if age_in_days < 1:
-        return "Newborn"
+        return "حديث الولادة"
     elif age_in_days < 7:
         return f"{age_in_days} أيام"
     elif age_in_days < 30:
@@ -153,147 +227,13 @@ def display_age(birth_date):
         years = age_in_days // 365
         return f"{years} سنوات "
 
-from datetime import datetime
-
-
-def calculate_age(dob):
-    """
-    Calculate the age in months from the date of birth.
-    """
-    birth_date = datetime.strptime(dob, "%Y-%m-%d %H:%M:%S")
-    today = datetime.today()
-    age_in_months = (today.year - birth_date.year) * 12 + today.month - birth_date.month
-    return age_in_months
-
-def get_song_date(song,artist): #get song date of release using song name and artist of it
-    check=sp.search(song+'-'+artist,type='track')
-    return check['tracks']['items'][0]['album']['release_date']
-
-
-def get_song_pic(song,artist): #get the album pic using song name and artist of it
-    check=sp.search(song+'-'+artist,type='track')
-    return check['tracks']['items'][0]['album']['images'][0]['url']
-
-
-def song_name(song, artist): #takes song name and artist, and figure out if this song is for this artist, then return the song name on spotify
-    check=sp.search(song+'-'+artist,type='track')
-    track_name= check['tracks']['items'][0]['name']
-    i=0
-    if '-' in track_name or '(' in track_name or '[' in track_name:
-        for letter in track_name:
-            if letter in ['-','(','[']:
-                return (track_name[0:i])
-                break
-            i+=1
-    return track_name
-
-def song_artist(song): #get most match artist name using his song title
-    check=sp.search(song,type='track')
-    return check['tracks']['items'][0]['album']['artists'][0]['name']
-
-
-
-def similar(a, b): #compare 2 strings if they are similar not equal
-    return SequenceMatcher(None, a, b).ratio()
-
-
-
-def get_pic(name): #get profile picture using artist name
-    if name is None:
-        return name
-    check =sp.search(str(name), type='artist')
-    image= check['artists']['items'][0]['images']
-    return str(image[0]['url'])
-
-#t="jxKlJKxMGltwDonuGzPigBjGpHcEvStESFPviiJy"
-#d = discogs_client.Client('ExampleApplication/0.1', user_token=t)
-
-def valid_name(name): #check if name exists in spotify artists
-    if name is None:
-        return True
-    check=sp.search(str(name), type='artist')
-    if not check:
-        return False
-    return True
-
-def get_name(name): #return most match name of artist on spotify
-    if name is None:
-        return True
-    check=sp.search(str(name), type='artist')
-    artist_name= check['artists']['items'][0]['name']
-    return artist_name
 
 
 
 
-#token="BvOyeN9cef-yzRDZC7qPWnjY0xiSdo1ugewZR0VdWbWnbsHCWJZ8ERw7gzrr550m"
 
 
 
 
-def apology(message, code=400):
-    """Render message as an apology to user."""
-    def escape(s):
-        """
-        Escape special characters.
-
-        https://github.com/jacebrowning/memegen#special-characters
-        """
-        for old, new in [("-", "--"), (" ", "-"), ("_", "__"), ("?", "~q"),
-                         ("%", "~p"), ("#", "~h"), ("/", "~s"), ("\"", "''")]:
-            s = s.replace(old, new)
-        return s
-    return render_template("apology.html", top=code, bottom=escape(message)), code
 
 
-def login_required(f):
-    """
-    Decorate routes to require login.
-
-    http://flask.pocoo.org/docs/0.12/patterns/viewdecorators/
-    """
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get("user_id") is None:
-            return redirect("/login")
-        return f(*args, **kwargs)
-    return decorated_function
-
-
-def lookup(symbol):
-    """Look up quote for symbol."""
-
-    # Prepare API request
-    symbol = symbol.upper()
-    end = datetime.datetime.now(pytz.timezone("US/Eastern"))
-    start = end - datetime.timedelta(days=7)
-
-    # Yahoo Finance API
-    url = (
-        f"https://query1.finance.yahoo.com/v7/finance/download/{urllib.parse.quote_plus(symbol)}"
-        f"?period1={int(start.timestamp())}"
-        f"&period2={int(end.timestamp())}"
-        f"&interval=1d&events=history&includeAdjustedClose=true"
-    )
-
-    # Query API
-    try:
-        response = requests.get(url, cookies={"session": str(uuid.uuid4())}, headers={"User-Agent": "python-requests", "Accept": "*/*"})
-        response.raise_for_status()
-
-        # CSV header: Date,Open,High,Low,Close,Adj Close,Volume
-        quotes = list(csv.DictReader(response.content.decode("utf-8").splitlines()))
-        quotes.reverse()
-        price = round(float(quotes[0]["Adj Close"]), 2)
-        return {
-            "name": symbol,
-            "price": price,
-            "symbol": symbol
-        }
-    except (requests.RequestException, ValueError, KeyError, IndexError):
-        return None
-
-
-def usd(value):
-    """Format value as USD."""
-    return f"${value:,.2f}"

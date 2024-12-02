@@ -84,37 +84,52 @@
         </div>
 </form>
     <script>
-    function previewImage(event) {
-        const input = event.target;
-        const preview = document.getElementById('child-img-preview');
+    // Function to preview the selected image
+function previewImage(event) {
+    // Get the input element (file input) that triggered the event
+    const input = event.target;
 
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-            }
-            reader.readAsDataURL(input.files[0]);
+    // Get the image preview element where the selected image will be displayed
+    const preview = document.getElementById('child-img-preview');
+
+    // Check if the input contains a file
+    if (input.files && input.files[0]) {
+        // Create a new FileReader to read the file content
+        const reader = new FileReader();
+
+        // Once the file is successfully read, update the preview image
+        reader.onload = function(e) {
+            // Set the preview image source to the file content (data URL)
+            preview.src = e.target.result;
+        }
+
+        // Read the selected file as a data URL (this is used to display the image)
+        reader.readAsDataURL(input.files[0]);
+    }
+}
+
+// Event listener to handle "Enter" key press for navigating form inputs
+document.getElementById('loginForm').addEventListener('keydown', function(event) {
+    // Check if the pressed key is "Enter"
+    if (event.key === 'Enter') {
+        event.preventDefault(); // Prevent form submission when pressing "Enter"
+
+        // Get all input fields in the form
+        const inputs = Array.from(this.querySelectorAll('input'));
+
+        // Get the current input element that is focused
+        const currentIndex = inputs.indexOf(document.activeElement);
+
+        // If the current input is not the last one, move to the next input
+        if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
+            inputs[currentIndex + 1].focus();
+        } else {
+            // If it's the last input, submit the form
+            this.submit();
         }
     }
-            document.getElementById('loginForm').addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                event.preventDefault(); // Prevent form submission on Enter
+});
 
-                // Get all input fields in the form
-                const inputs = Array.from(this.querySelectorAll('input'));
-
-                // Get the current input being focused
-                const currentIndex = inputs.indexOf(document.activeElement);
-
-                // Move to the next input if not the last one
-                if (currentIndex >= 0 && currentIndex < inputs.length - 1) {
-                    inputs[currentIndex + 1].focus();
-                } else {
-                    // If it's the last input, trigger form submission
-                    this.submit();
-                }
-            }
-        });
 </script>
 
 </div>

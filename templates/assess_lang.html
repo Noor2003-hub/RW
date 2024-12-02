@@ -31,7 +31,6 @@
     </div>
 </div>
 <style>
-    /* Adjust the button position for smaller screens */
     @media (max-width: 768px) {
         #f{
             visibility: hidden;
@@ -43,7 +42,7 @@
             top:1px;
         }
         .button-form {
-            top:80px; /* Adjust the left position for smaller screens */
+            top:80px;
         }
         .button-form2{
             top:80px;
@@ -73,62 +72,93 @@
         <div class="label">3-5 تقييم عمر المساعدة الذاتية</div>
     </div>
 </div>
-
 <script>
-    function setStep(currentStep) {
-        const steps = document.querySelectorAll('.step');
-        steps.forEach((step, index) => {
-            if (index < currentStep - 1) {
-                step.classList.add('completed');
-                step.classList.remove('active');
-            } else if (index === currentStep - 1) {
-                step.classList.add('active');
-                step.classList.remove('completed');
-            } else {
-                step.classList.remove('active');
-                step.classList.remove('completed');
-            }
-        });
-    }
-
-    function setSubstep(currentSubstep) {
-        const substeps = document.querySelectorAll('.substep');
-        substeps.forEach((substep, index) => {
-            if (index < currentSubstep - 1) {
-                substep.classList.add('completed');
-                substep.classList.remove('active');
-            } else if (index === currentSubstep - 1) {
-                substep.classList.add('active');
-                substep.classList.remove('completed');
-            } else {
-                substep.classList.remove('active');
-                substep.classList.remove('completed');
-            }
-        });
-    }
-
-    // Get the current step from Flask
-    document.addEventListener('DOMContentLoaded', function() {
-        const currentStep = {{ current_step }};
-        const currentSubstep = {{ current_substep }};
-        setStep(currentStep);
-        setSubstep(currentSubstep);
+// Updates the visual state of the main steps based on the current step.
+function setStep(currentStep) {
+    const steps = document.querySelectorAll('.step'); // Get all elements with the 'step' class
+    steps.forEach((step, index) => {
+        if (index < currentStep - 1) {
+            // Mark all steps before the current one as 'completed'
+            step.classList.add('completed');
+            step.classList.remove('active');
+        } else if (index === currentStep - 1) {
+            // Highlight the current step as 'active'
+            step.classList.add('active');
+            step.classList.remove('completed');
+        } else {
+            // Reset all steps after the current one
+            step.classList.remove('active');
+            step.classList.remove('completed');
+        }
     });
+}
+
+// Updates the visual state of substeps within the current step.
+function setSubstep(currentSubstep) {
+    const substeps = document.querySelectorAll('.substep'); // Get all elements with the 'substep' class
+    substeps.forEach((substep, index) => {
+        if (index < currentSubstep - 1) {
+            // Mark all substeps before the current one as 'completed'
+            substep.classList.add('completed');
+            substep.classList.remove('active');
+        } else if (index === currentSubstep - 1) {
+            // Highlight the current substep as 'active'
+            substep.classList.add('active');
+            substep.classList.remove('completed');
+        } else {
+            // Reset all substeps after the current one
+            substep.classList.remove('active');
+            substep.classList.remove('completed');
+        }
+    });
+}
+
+// Automatically updates the steps and substeps when the page loads.
+// The `currentStep` and `currentSubstep` values are dynamically injected from Flask.
+document.addEventListener('DOMContentLoaded', function() {
+    const currentStep = {{ current_step }}; // Get the current step from Flask
+    const currentSubstep = {{ current_substep }}; // Get the current substep from Flask
+    setStep(currentStep); // Update the main steps
+    setSubstep(currentSubstep); // Update the substeps
+});
+
 </script>
 <br>
-<form method="post" action="/submit_lang" style="margin-right: auto;margin-left: auto; width:70%;display: flex; margin-top: 10px;">
-    <div style="text-align: right;">
+    <div style="text-align: center;">
         <h1 style="margin: 0;">تقييم العمر اللغوي 🗣</h1>
         <h2 style="margin: 0;">{{data[-1].age}} سنوات</h2>
     </div>
-    <button class="btn btn-primary"style="margin-left: 0;" type="submit" {% if not done %} disabled{% endif %}>
-        التالي 👈
-    </button>
-</form>
-<br>
-<p>اختر ✔️ اذا تمكن طفلك من المهارة</p>
-<p>اختر ⏹️ عند وجود بدايات للمهارة</p>
-<p>اختر ❌ اذا لم يتمكن طفلك من المهارة</p>
+
+<div style="
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #f5f5f5;
+    border: 2px solid #ccc;
+    border-radius: 10px;
+    padding: 15px 20px;
+    margin-bottom: 20px;
+    font-size: 1.2rem;">
+
+  <div style="text-align: center;">
+    <div style="font-size: 2rem; color: green;">✅</div>
+    <span style="font-weight: bold; color: green;">يعرف</span>
+    <p style="margin: 5px 0; color: #333;">اخترها اذا تمكن طفلك من المهارة</p>
+  </div>
+
+  <div style="text-align: center;">
+    <div style="font-size: 2rem; color: orange;">⏳</div>
+    <span style="font-weight: bold; color: orange;">لديه بدايات المعرفة</span>
+    <p style="margin: 5px 0; color: #333;">اخترها عند وجود بدايات للمهارة</p>
+  </div>
+
+  <div style="text-align: center;">
+    <div style="font-size: 2rem; color: red;">❌</div>
+    <span style="font-weight: bold; color: red;">لا يعرف</span>
+    <p style="margin: 5px 0; color: #333;">اخترها اذا لم يتمكن طفلك من المهارة</p>
+  </div>
+</div>
+
 
 
 
@@ -142,7 +172,7 @@
             </tr>
             {% for i in data %}
             {% if i.age[0] == child_age %}
-            <tr {% if i.scale >= 0 %} style="background-color: rgba(0,0,0, 0.1);" {% endif %}>
+            <tr {% if i.scale >= 0 %} style="background-color: rgba(0,0,0, 0.5);" {% endif %}>
                 <td style="text-align: center; width: 10%;">
                     <strong>{{ i.title }}</strong>
                 </td>
@@ -160,7 +190,7 @@
                     </label>
                     <label>
                         <input type="radio" name="performances[{{ loop.index0 }}][scale]" value="1" {% if i.scale == 1 %}checked{% endif %}>
-                        <p>⏹️</p>
+                        <p>⏳</p>
                     </label>
                     <label>
                         <input type="radio" name="performances[{{ loop.index0 }}][scale]" value="0" {% if i.scale == 0 %}checked{% endif %}>
@@ -177,18 +207,26 @@
             {% endif %}
             {% endfor %}
         </table>
-        <button class="btn btn-primary" type="submit">حفظ 📌</button>
-    </form>
-</div>
+        <div style="display: flex; justify-content: space-between; width: 100%; padding-top: 10px;">
+            <button class="btn btn-primary" type="submit" style="width: 48%;">حفظ 📌</button></form>
+            <form method="post" action="/submit_lang" style="width: 48%;">
+                <button class="btn btn-primary" type="submit" {% if not done %} disabled{% endif %} style="width: 100%;">التالي 👈</button>
+            </form>
+        </div>
+
 
 <script>
-    function adjustWidth(input) {
-        input.style.width = (input.value.length + 1) + 'ch';
-    }
+// Dynamically adjusts the width of comment field based on its content.
+function adjustWidth(input) {
+    // Set the comment width to match the length of its value plus a little extra for spacing.
+    input.style.width = (input.value.length + 1) + 'ch';
+}
+// If there's already a value in the input, adjust the width on page load
+// Automatically adjusts the width of all inputs with the class 'dynamic-width'
+// when the page loads, ensuring their size fits any pre-filled values.
+document.querySelectorAll('.dynamic-width').forEach(function(input) {
+    adjustWidth(input); // Adjust width for each input element found with the 'dynamic-width' class.
+});
 
-    // If there's already a value in the input, adjust the width on page load
-    document.querySelectorAll('.dynamic-width').forEach(function(input) {
-        adjustWidth(input);
-    });
 </script>
 {% endblock %}

@@ -39,45 +39,56 @@
 </form>
 
 <script>
-    document.addEventListener("DOMContentLoaded", function() {
-        var chatWindow = document.getElementById("chat-window");
-        chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
+    // Wait for the entire HTML document to fully load before running this script
+document.addEventListener("DOMContentLoaded", function() {
+    // Automatically scroll the chat window to the bottom when the page loads
+    var chatWindow = document.getElementById("chat-window");
+    chatWindow.scrollTop = chatWindow.scrollHeight;
 
-        document.getElementById("chat-form").addEventListener("submit", function(event) {
-            event.preventDefault(); // Prevent the form from submitting traditionally
+    // Add an event listener for when the chat form is submitted
+    document.getElementById("chat-form").addEventListener("submit", function(event) {
+        event.preventDefault(); // Prevent the form from submitting the usual way (page refresh)
+        // Get the user's message from the input field
+        var messageContent = document.getElementById("message-input").value;
 
-            var messageContent = document.getElementById("message-input").value;
+        // If the message is empty or only whitespace, do nothing
+        if (messageContent.trim() === "") {
+            return; // Exit the function early
+        }
 
-            if (messageContent.trim() === "") {
-                return; // Don't submit empty messages
+        // Show a loading animation on the submit button while the message is being processed
+        var submitButton = document.querySelector(".btn-primary");
+        submitButton.innerHTML = "<div class='loader'></div>"; // Replace button content with a loader
+        submitButton.disabled = true; // Temporarily disable the button to prevent multiple clicks
+
+        // Create an AJAX request to send the message to the server
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "", true); // Send a POST request to the current URL
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+        // Handle the server's response
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                // Clear the input field after the message is successfully sent
+                document.getElementById("message-input").value = "";
+
+                // Restore the original appearance and functionality of the submit button
+                submitButton.innerHTML = "<h3>➣</h3>"; // Reset the button text/icon
+                submitButton.disabled = false;
+
+                // Optionally, append the server's response (new message) to the chat window
+                chatWindow.innerHTML += xhr.responseText;
+
+                // Automatically scroll to the bottom to show the latest message
+                chatWindow.scrollTop = chatWindow.scrollHeight;
             }
+        };
 
-            var submitButton = document.querySelector(".btn-primary");
-            submitButton.innerHTML = "<div class='loader'></div>"; // Show loading animation
-            submitButton.disabled = true; // Disable the button to prevent multiple submissions
-
-            // AJAX request to send the message
-            var xhr = new XMLHttpRequest();
-            xhr.open("POST", "", true);
-            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState == 4 && xhr.status == 200) {
-                    // Clear the input field
-                    document.getElementById("message-input").value = "";
-                    submitButton.innerHTML = "<h3>➣</h3>"; // Reset the button
-                    submitButton.disabled = false;
-
-                    // Optionally, you could also append the new message to the chat window here
-                    chatWindow.innerHTML += xhr.responseText;
-                    chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the bottom
-                }
-            };
-
-            // Send the message content to the server
-            xhr.send("message=" + encodeURIComponent(messageContent));
-        });
+        // Send the message data to the server in URL-encoded format
+        xhr.send("message=" + encodeURIComponent(messageContent));
     });
+});
+
 </script>
 <script>
     document.addEventListener("DOMContentLoaded", function() {

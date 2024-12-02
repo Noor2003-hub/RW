@@ -250,23 +250,56 @@ input.largerCheckbox {
     content: none;
 }
 
+/* Active and Completed step styles remain the same for span background */
 .step.active span,
 .step.completed span,
 .substep.active span,
 .substep.completed span {
-    background-color: #2a9d8f; /* Active/Completed step color */
+    background-color: #2a9d8f; /* Common color for Active/Completed */
 }
 
+/* Add emphasis to the active label */
 .step.active .label,
-.step.completed .label, .substep.active .label,
+.substep.active .label {
+    font-weight: bold;        /* Make the text bold */
+    font-size: 0.9em;         /* Slightly larger text for active steps */
+    color: #2a9d8f;           /* Same color as before */
+    text-transform: uppercase; /* Optional: Make text uppercase for prominence */
+    letter-spacing: 0.05em;   /* Optional: Slight spacing for clarity */
+}
+
+/* Completed label remains the same */
+.step.completed .label,
 .substep.completed .label {
     font-weight: bold;
-    color: #2a9d8f; /* Active/Completed label color */
+    color: #2a9d8f;
 }
 
-.step.completed:before, .substep.completed:before {
-    background-color: #2a9d8f; /* Completed step bar color */
+/* Completed bar style remains the same */
+.step.completed:before,
+.substep.completed:before {
+    background-color: #2a9d8f;
 }
+
+/* Add animation to active steps for extra emphasis */
+.step.active .label,
+.substep.active .label {
+    animation: pulse 1.5s infinite;
+}
+
+/* Keyframes for a subtle pulsing effect */
+@keyframes pulse {
+    0% {
+        transform: scale(1); /* Normal size */
+    }
+    50% {
+        transform: scale(1.05); /* Slightly larger for emphasis */
+    }
+    100% {
+        transform: scale(1); /* Return to normal size */
+    }
+}
+
 
 
 
@@ -856,7 +889,12 @@ to {
     font-size: 110%;
     font-weight: bold;
 }
-
+label > p {
+        display: inline-block;
+        font-size: 1.5rem; /* Increase icon size */
+        margin: 0;
+        vertical-align: middle; /* Align text/icons with radio button */
+    }
 /* Hide the actual radio input */
 input[type="radio"] {
     display: none;

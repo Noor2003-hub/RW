@@ -88,39 +88,60 @@
 
 <script>
     function cropAndPreviewImage(event) {
-        const input = event.target;
-        const preview = document.getElementById('child-img-preview');
+    // Get the input element that triggered the event
+    const input = event.target;
 
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                const image = new Image();
-                image.src = e.target.result;
-                image.onload = function() {
-                    const canvas = document.createElement('canvas');
-                    const ctx = canvas.getContext('2d');
+    // Get the preview image element where the cropped image will be displayed
+    const preview = document.getElementById('child-img-preview');
 
-                    // Crop to square (take the shortest side as dimension)
-                    const sideLength = Math.min(image.width, image.height);
-                    canvas.width = sideLength;
-                    canvas.height = sideLength;
-                    ctx.drawImage(image, (image.width - sideLength) / 2, (image.height - sideLength) / 2, sideLength, sideLength, 0, 0, sideLength, sideLength);
+    // Check if a file is selected
+    if (input.files && input.files[0]) {
+        // Create a new FileReader to read the image file
+        const reader = new FileReader();
 
-                    // Update preview image with the cropped version
-                    preview.src = canvas.toDataURL('image/png');
+        // Once the file is successfully loaded, execute this function
+        reader.onload = function(e) {
+            // Create a new image element to load the file data
+            const image = new Image();
+            image.src = e.target.result;
 
-                    // Convert the canvas data to a blob and update the input file
-                    canvas.toBlob(function(blob) {
-                        const croppedFile = new File([blob], input.files[0].name, { type: 'image/png' });
-                        const dataTransfer = new DataTransfer();
-                        dataTransfer.items.add(croppedFile);
-                        input.files = dataTransfer.files;
-                    }, 'image/png');
-                };
+            // When the image is loaded, execute the crop process
+            image.onload = function() {
+                // Create a canvas to perform the image cropping
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+
+                // Determine the shortest side of the image to create a square crop
+                const sideLength = Math.min(image.width, image.height);
+                canvas.width = sideLength;
+                canvas.height = sideLength;
+
+                // Draw the cropped image on the canvas, centered
+                ctx.drawImage(image, (image.width - sideLength) / 2, (image.height - sideLength) / 2, sideLength, sideLength, 0, 0, sideLength, sideLength);
+
+                // Convert the canvas content into a data URL and update the preview image
+                preview.src = canvas.toDataURL('image/png');
+
+                // Convert the canvas data to a blob and update the input file with the cropped image
+                canvas.toBlob(function(blob) {
+                    // Create a new File object with the cropped image blob
+                    const croppedFile = new File([blob], input.files[0].name, { type: 'image/png' });
+
+                    // Use DataTransfer to simulate a file being selected in the input
+                    const dataTransfer = new DataTransfer();
+                    dataTransfer.items.add(croppedFile);
+
+                    // Update the input's files property with the new cropped file
+                    input.files = dataTransfer.files;
+                }, 'image/png');
             };
-            reader.readAsDataURL(input.files[0]);
-        }
+        };
+
+        // Read the image file as a data URL
+        reader.readAsDataURL(input.files[0]);
     }
+}
+
 </script>
 
 {% endblock %}

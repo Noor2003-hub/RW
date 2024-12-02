@@ -16,14 +16,14 @@
         align-items: center;
     }
     .modal-header {
-    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6); /* Subtle shadow for text clarity */
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
     font-size: 1.8rem;
     font-weight: bold;
-    border-radius: 8px; /* Slight rounding for smoothness */
+    border-radius: 8px;
     padding: 10px;
     width:auto;
-    background-color: white; /* Solid background */
-    color: #333; /* High contrast text */
+    background-color: white;
+    color: #333;
 }
     .list-group{
        background-color: rgb(255,255,255,0.9);
@@ -51,7 +51,6 @@
 <div class="container" style="display: flex; justify-content: center; z-index: 2; position: relative; width:100%;">
 
 
-    <!-- Left section (button and image) -->
     <div style="flex: 10; display: flex; flex-direction: column; align-items: center;">
         <form method="post" action="/home_tut" style="position: absolute; left:5px; z-index: 3;">
             <button class="btn2" type="submit" style="background: none; border: none;">
@@ -86,14 +85,20 @@
 
         <h1 >{{ name }}</h1>
         <form method="GET" action="/view_development">
+            {% if not age == 'حديث الولادة' %}
             {% if gender == 'female' %}
                 <h3>تبلغ {{ age }}<h6><button type="submit">مستوى {{name}}</button></h6></h3>
             {% else %}
                 <h3>يبلغ {{ age }}<h6><button type="submit">مستوى {{name}}</button></h6></h3>
             {% endif %}
+            {% else %}
+            <h3>طفلك {{ age }}<h6><button type="submit">مستوى {{name}}</button></h6></h3>
+{% endif %}
             {% if disability %}
                 <p>طفلك يجب ان يكمل المهارات للفئة العمرية {{ chosen }} سنوات</p>
             {% endif %}
+
+
         </form>
     </div>
 
@@ -107,17 +112,14 @@
         <td style="width: 80%">
             <div style="width:80%; margin-left: auto;
   margin-right: auto; text-align: right">
-            <!-- Heading with question mark icon to open modal -->
 <h2 dir="rtl">قائمة الأهداف
     <button style="font-size:20px; background-color: transparent; border-color: transparent;" data-bs-toggle="modal" data-bs-target="#infoModal" aria-label="Information">
         �
     </button>
 </h2>
 
-<!-- Text based on gender -->
 
 
-<!-- Modal structure for additional information -->
 <div class="modal fade" id="infoModal" tabindex="-1" aria-labelledby="infoModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -150,7 +152,6 @@
 <form method="GET" action="/home" style="width:100%; padding-right: 10%; padding-left: 10%">
     <div class="filter-container" style="display: flex; gap: 10px;">
 
-        <!-- Category Filter -->
 
         <select name="category" class="form-select">
             <option value="">جميع المجالات</option>
@@ -161,7 +162,6 @@
             <option value="المخالطة الاجتماعية"{% if selected_category == 'المخالطة الاجتماعية' %}selected {%endif%}>👥 المخالطة الاجتماعية</option>
         </select>
 
-        <!-- Age Range Filter -->
         <select name="age_range" class="form-select">
             <option value="">جميع الفئات العمرية</option>
             {% for range in ranges %}
@@ -169,14 +169,12 @@
             {% endfor %}
         </select>
 
-        <!-- Assessment Filter -->
         <select name="scale" class="form-select">
             <option value="">جميع التقييمات</option>
-            <option value="1" {% if selected_scale == '1' %}selected{%endif%}>⏹️ قيد التقدم</option>
+            <option value="1" {% if selected_scale == '1' %}selected{%endif%}>⏳ قيد التقدم</option>
             <option value="0" {% if selected_scale == '0' %}selected{%endif%}>❌ لم يكتمل</option>
         </select>
 
-        <!-- Filter Button -->
         <button type="submit" class="btn btn-primary">بحث</button>
     </div>
 </form>
@@ -212,7 +210,6 @@
             أنشطة مقترحة
         </button>
 
-       <!-- Modal for Suggested Activities -->
             <div class="modal fade" id="activitiesModal{{ loop.index }}" tabindex="-1" aria-labelledby="activitiesModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     <div class="modal-content {% if i.category == 'الحركة' %}motion-bg{% elif i.category == 'الإدراك' %}cognition-bg{% elif i.category == 'اللغة' %}language-bg{% elif i.category == 'المساعدة الذاتية' %}selfcare-bg{% elif i.category == 'المخالطة الاجتماعية' %}social-bg{% endif %}">
@@ -259,7 +256,7 @@
 
     <label>
         <input type="radio" name="scale" value="1" id="scale-1" {% if i.scale == 1 %}checked{% endif %}>
-        <p>⏹️</p>
+        <p>⏳</p>
     </label>
 
     <label>
@@ -312,7 +309,6 @@
                 <form method="GET" action="/home" style="width:100%; padding-right: 10%; padding-left: 10%">
     <div class="filter-container" style="display: flex; gap: 10px;">
 
-        <!-- Category Filter -->
 
         <select name="category" class="form-select">
             <option value="">جميع المجالات</option>
@@ -323,7 +319,6 @@
             <option value="المخالطة الاجتماعية"{% if selected_category == 'المخالطة الاجتماعية' %}selected {%endif%}>👥 المخالطة الاجتماعية</option>
         </select>
 
-        <!-- Age Range Filter -->
         <select name="age_range" class="form-select">
             <option value="">جميع الفئات العمرية</option>
             {% for range in ranges %}
@@ -331,14 +326,12 @@
             {% endfor %}
         </select>
 
-        <!-- Assessment Filter -->
         <select name="scale" class="form-select">
             <option value="">جميع التقييمات</option>
-            <option value="1" {% if selected_scale == '1' %}selected{%endif%}>⏹️ قيد التقدم</option>
+            <option value="1" {% if selected_scale == '1' %}selected{%endif%}>⏳ قيد التقدم</option>
             <option value="0" {% if selected_scale == '0' %}selected{%endif%}>❌ لم يكتمل</option>
         </select>
 
-        <!-- Filter Button -->
         <button type="submit" class="btn btn-primary">بحث</button>
     </div>
 </form>
@@ -372,22 +365,28 @@
                 {% endfor %}
             </div>
 <script>
-    function adjustWidth(input) {
-        input.style.width = (input.value.length + 1) + 'ch';
-    }
+    // Function to adjust the width of an input field based on its content
+function adjustWidth(input) {
+    // Dynamically set the input field's width to match the length of its value
+    input.style.width = (input.value.length + 1) + 'ch'; // Adds 1 extra character for better spacing
+}
 
-    // If there's already a value in the input, adjust the width on page load
-    document.querySelectorAll('.dynamic-width').forEach(function(input) {
-        adjustWidth(input);
-    });
-    window.onload = function() {
+// Automatically adjust the width of all input fields with the class 'dynamic-width' on page load
+document.querySelectorAll('.dynamic-width').forEach(function(input) {
+    adjustWidth(input); // Call the adjustWidth function for each input
+});
+
+// Execute the following code when the page finishes loading
+window.onload = function() {
+    // Select the confetti element to manipulate it later
     const confetti = document.querySelector('.confetti');
 
-    // Make the confetti pieces fade out and disappear after 5 seconds
+    // Hide the confetti element after 2 seconds (2000 milliseconds)
     setTimeout(() => {
-        confetti.classList.add('hidden');
+        confetti.classList.add('hidden'); // Add a CSS class to fade out the confetti
     }, 2000);
 };
+
 
 </script>
 

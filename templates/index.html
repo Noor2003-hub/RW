@@ -24,7 +24,7 @@
             padding: 0;
             width: 100%;
 
-            overflow-x: hidden; /* Prevent horizontal scrolling */
+            overflow-x: hidden;
         }
 
         .navbar {
@@ -126,20 +126,19 @@
         @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
 
         .zoom-img {
-    transition: transform 0.5s ease; /* Smooth transition */
-            /* Black border */
+    transition: transform 0.5s ease;
 }
 
 .zoom-img:hover {
-    transform: scale(1.1); /* Zoom in */
+    transform: scale(1.1);
 }
 
         .slideshow-container {
             position: relative;
             max-width: 100%;
             margin: auto;
-            height: 500px; /* Set a fixed height for the slideshow */
-            overflow: hidden; /* Hide overflow to ensure all images are contained */
+            height: 500px;
+            overflow: hidden;
         }
 
         .mySlides {
@@ -153,7 +152,7 @@
         .mySlides img {
             width: 100%;
             height: 100%;
-            object-fit: cover; /* Scale the image to cover the container while preserving aspect ratio */
+            object-fit: cover;
             animation: zoomInOut 5s ease-in-out infinite;
         }
 
@@ -162,8 +161,8 @@
         }
         .sticker-img {
             position: absolute;
-            bottom: 100px; /* Adjust as needed */
-            left: 100px; /* Adjust as needed */
+            bottom: 100px;
+            left: 100px;
             height: 200px;
             width: 300px;
             z-index: 3;
@@ -175,9 +174,9 @@
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none; /* Allows interaction with elements behind the overlay */
-            z-index: 1; /* Ensure the overlay is above the slideshow */
-            transition: background-color 0.5s ease; /* Smooth transition for opacity change */
+            pointer-events: none;
+            z-index: 1;
+            transition: background-color 0.5s ease;
         }
 
         .overlay-text {
@@ -191,7 +190,7 @@
             font-family: 'Tajawal', sans-serif;
             padding: 100px 10px;
             border-radius: 10px;
-            z-index: 2; /* Ensure text is above the overlay */
+            z-index: 2;
             -webkit-text-stroke: 1px black;
             text-shadow:
                 3px 3px 0 #000,
@@ -216,9 +215,8 @@
             }
         }
         @media only screen and (min-width: 900px) {
-            /* Show sticker image only on devices with a minimum width of 768px (desktops and tablets) */
             .sticker-img {
-                display: block; /* Show the sticker image */
+                display: block;
             }}
 
          @media only screen and (max-width: 900px) {
@@ -272,49 +270,60 @@
 
 
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-        let slideIndex = 0;
-        const slides = document.getElementsByClassName("mySlides");
-        const totalSlides = slides.length;
+// Wait until the entire web page is fully loaded before running this script
+document.addEventListener('DOMContentLoaded', function () {
+    let slideIndex = 0; // Keeps track of the current slide being shown
+    const slides = document.getElementsByClassName("mySlides"); // Grab all elements with the "mySlides" class
+    const totalSlides = slides.length; // Total number of slides in the slideshow
 
-        function showSlides() {
+    // Function to display the slides one at a time in a loop
+    function showSlides() {
+        // First, hide all slides by removing the "active" class from each one
         Array.from(slides).forEach(slide => slide.classList.remove("active"));
+
+        // Update the slide index (cycle back to the first slide if we reach the end)
         slideIndex = (slideIndex % totalSlides) + 1;
+
+        // Show the current slide by adding the "active" class
         slides[slideIndex - 1].classList.add("active");
-        setTimeout(showSlides, 5000); // Change image every 5 seconds
+
+        // Automatically move to the next slide after 5 seconds
+        setTimeout(showSlides, 5000);
     }
 
-        showSlides();
+    // Start the slideshow
+    showSlides();
 
-        // Adjust overlay and text opacity based on scroll
-        document.addEventListener('scroll', function () {
-        const scrollPosition = window.scrollY;
-        const slideshowHeight = document.querySelector('.slideshow-container').clientHeight;
-        const overlay = document.querySelector('.overlay');
-        const overlayText = document.querySelector('.overlay-text');
-        const maxOverlayOpacity = 1.0; // Maximum opacity of the overlay
-        const maxTextOpacity = 1.0; // Maximum opacity of the text
+    // Add an event listener to adjust overlay and text opacity when the user scrolls
+    document.addEventListener('scroll', function () {
+        const scrollPosition = window.scrollY; // Current vertical scroll position
+        const slideshowHeight = document.querySelector('.slideshow-container').clientHeight; // Height of the slideshow container
+        const overlay = document.querySelector('.overlay'); // Overlay element over the slideshow
+        const overlayText = document.querySelector('.overlay-text'); // Text displayed on the overlay
+        const maxOverlayOpacity = 1.0; // Maximum opacity the overlay can reach
+        const maxTextOpacity = 1.0; // Maximum opacity for the overlay text
 
-        // Calculate overlay opacity based on scroll position
+        // Determine how much the overlay should fade in based on the scroll position
         let overlayOpacity = 0;
         if (scrollPosition <= slideshowHeight) {
-        // Smoothly increase overlay opacity as we scroll
-        overlayOpacity = Math.min(scrollPosition / slideshowHeight, maxOverlayOpacity);
-    } else {
-        // When scrolling past the slideshow, set overlay opacity to 100%
-        overlayOpacity = maxOverlayOpacity;
-    }
+            // If we're scrolling within the slideshow area, gradually increase overlay opacity
+            overlayOpacity = Math.min(scrollPosition / slideshowHeight, maxOverlayOpacity);
+        } else {
+            // Once we've scrolled past the slideshow, keep the overlay fully visible
+            overlayOpacity = maxOverlayOpacity;
+        }
 
-        // Smoothly adjust opacity
+        // Smoothly update the overlay's background color to reflect the calculated opacity
         overlay.style.transition = 'background-color 0.1s ease-out';
-        overlay.style.backgroundColor = `rgba(239,196,107, ${overlayOpacity})`;
+        overlay.style.backgroundColor = `rgba(239,196,107, ${overlayOpacity})`; // Adjust the background color's transparency
 
-        // Adjust overlay text opacity (fade out as scroll position increases)
+        // Gradually fade out the overlay text as the user scrolls down
         const textOpacity = Math.max(1 - (scrollPosition / slideshowHeight), 0);
         overlayText.style.transition = 'opacity 0.1s ease-out';
-        overlayText.style.opacity = textOpacity;
+        overlayText.style.opacity = textOpacity; // Adjust the text's transparency
     });
-    });
+});
+
 </script>
 
 
@@ -393,11 +402,11 @@
                 }
 
                 .card {
-                    height: 200px; /* Set a fixed height for all cards */
+                    height: 200px;
                     width: 200px;
                     background-color: rgba(255, 255, 255, 0.6);
-                    background-size: cover; /* Ensure the background covers the entire card */
-                    background-position: center; /* Center the background image */
+                    background-size: cover;
+                    background-position: center;
                     border-radius: 10px;
                     padding: 15px;
                     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -431,11 +440,8 @@
                 }
 
                 .card:nth-child(5), .card:nth-child(6), .card:nth-child(7) {
-                    width: 200px; /* Adjust 3 cards in second row */
+                    width: 200px;
                 }
-
-                /* Red circle with image */
-                /* Red circle with shadow effect */
                 .red-circle {
                     position: absolute;
                     top: 0;
@@ -452,7 +458,7 @@
 
 
                 .red-circle img {
-                    width: 90%; /* Adjust size of the image inside the circle */
+                    width: 90%;
                     height: 90%;
 
                     object-fit: contain;

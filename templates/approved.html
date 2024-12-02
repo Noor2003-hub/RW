@@ -9,7 +9,6 @@
     <a href="/admin" class="btn btn-primary" style="background-color: #264653">العودة︎</a>
 </div>
 
-<!-- Main content -->
 <main class="container-fluid py-5 text-center">
     <div class="container">
         <table class="table table-bordered">
@@ -29,7 +28,6 @@
                     </div>
 
                     <div class="containerr" style="width:50%;">
-                        <!-- Certificate Image -->
                         <img src="{{ i.certificate }}" alt="Certificate Image" style="width:200px;height: auto;cursor: pointer;" onclick="showModal('{{ i.certificate }}')">
 
                         <form action="/cancle" method="post">
@@ -48,20 +46,18 @@
     {% endif %}
 </main>
 
-<!-- Modal for Full-Screen Preview -->
 <div id="modal" class="modal">
     <span class="close" onclick="hideModal()">&times;</span>
     <img class="modal-content" id="modal-img">
 </div>
 
-<!-- Modal Styles -->
 <style>
 .modal {
     display: none;
     position: fixed;
     z-index: 1000;
     padding-top: 10px;
-    left: 10%; /* Position it in the center horizontally */
+    left: 10%;
     top: 10%;
     width: auto;
     height: auto;
@@ -94,18 +90,20 @@
 }
 </style>
 
-<!-- JavaScript for Modal -->
 <script>
+// Displays a modal window with an image.
 function showModal(imageSrc) {
-    const modal = document.getElementById('modal');
-    const modalImg = document.getElementById('modal-img');
-    modal.style.display = "block";
-    modalImg.src = imageSrc;
+    const modal = document.getElementById('modal'); // Get the modal element (popup window).
+    const modalImg = document.getElementById('modal-img'); // Get the image element inside the modal.
+    modal.style.display = "block"; // Make the modal visible by setting its display to "block".
+    modalImg.src = imageSrc; // Set the image inside the modal to the provided source.
 }
 
+// Hides the modal window.
 function hideModal() {
-    const modal = document.getElementById('modal');
-    modal.style.display = "none";
+    const modal = document.getElementById('modal'); // Get the modal element (popup window).
+    modal.style.display = "none"; // Hide the modal by setting its display to "none".
 }
 </script>
+
 {% endblock %}

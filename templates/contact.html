@@ -53,11 +53,18 @@
         </div>
 
         <script>
-            function toggleDetails(element) {
-                const details = element.nextElementSibling;
-                details.style.display = details.style.display === "none" ? "block" : "none";
-                element.textContent = details.style.display === "none" ? "عرض المزيد" : "عرض أقل";
-            }
+            //Toggles the visibility of a details section and updates the button text.
+    function toggleDetails(element) {
+    // Get the next sibling element, which contains the details to be toggled.
+    const details = element.nextElementSibling;
+
+    // Toggle the display property between "none" and "block".
+    details.style.display = details.style.display === "none" ? "block" : "none";
+
+    // Update the button text based on the current visibility of the details.
+    element.textContent = details.style.display === "none" ? "عرض المزيد" : "عرض أقل";
+}
+
         </script>
     </body>
 {% endblock %}
