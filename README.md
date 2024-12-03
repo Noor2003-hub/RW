@@ -1,5 +1,5 @@
 # RiseWise
-#### Video Demo:  <https://www.youtube.com/watch?v=BV3OMB2SrrM&t=1s>
+#### Video Demo:  <https://www.youtube.com/watch?v=dIjMtugDess&t=1s>
 #### Description: RiseWise is a platform designed to assist parents in tracking and supporting their child’s developmental milestones, offering personalized activities, and enabling seamless communication with specialists.
 ## Technologies Used:
 - Backend: [Flask](https://flask.palletsprojects.com/en/1.1.x/)
@@ -65,3 +65,10 @@
     ```bash
     flask run
     ```
+### Usage
+- Register as a parent or specialist.
+- Evaluate the child’s performance and view progress reports.
+- Use the chat feature to connect with specialists for advice.
+
+## License
+All data provided by Poratge.
