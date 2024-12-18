@@ -1,5 +1,11 @@
-{% extends "layout.html" %}
+{% if session['user_type'] == 'p'%}
 
+{% extends "layout.html" %}
+{% elif session['user_type'] == 's' %}
+{% extends "layout2.html" %}
+{% else%}
+{% extends "layout3.html" %}
+{%endif%}
 {% block title %}
     Homepage
 {% endblock %}

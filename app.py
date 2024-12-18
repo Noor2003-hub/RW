@@ -664,12 +664,12 @@ def contact():
 #create chat url according to recipient_id
 @app.route("/chat/<int:recipient_id>", methods=["GET", "POST"])
 def chat(recipient_id):
-    # Check if the user session is active; if not, redirect to login.
+    #check if the user session is active; if not, redirect to login
     if not check_session():
         flash('انتهت جلستك. الرجاء إعادة تسجيل الدخول لرؤية هذا المحتوى')
         return redirect('/login')
 
-    # Determine the type of user (parent or specialist).
+    #determine the type of user (parent or specialist)
     user_type = session.get('user_type')
 
     # Retrieve the recipient and sender details based on the user type.
