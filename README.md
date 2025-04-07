@@ -47,8 +47,8 @@
 ### Installation
 1. **Clone the repository**:
     ```bash
-    git clone https://github.com/username/parentguide.git
-    cd parentguide
+    git clone https://github.com/Noor2003-hub/RW.git
+    cd RW
     ```
 
 2. **Install dependencies**:
