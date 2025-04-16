@@ -6,6 +6,43 @@ from collections import defaultdict
 with open('cards.json', 'r', encoding='utf-8') as f:
     data = json.load(f)
 
+import re
+
+def normalize_arabic(text):
+    # Remove diacritics
+    text = re.sub(r'[\u064B-\u065F]', '', text)
+
+    # Normalize letters
+    substitutions = {
+        'أ': 'ا', 'إ': 'ا', 'آ': 'ا',
+        'ى': 'ي', 'ؤ': 'و', 'ئ': 'ي',
+        'ة': 'ه', 'گ': 'ك'
+    }
+    for src, target in substitutions.items():
+        text = text.replace(src, target)
+
+    # Optional light stemming (remove common prefixes/suffixes)
+    prefixes = ['ال', 'و', 'ف', 'ب', 'ك', 'ل', 'لل', 'ت', 'ي']
+    suffixes = ['ه', 'ها', 'هم', 'كما', 'نا', 'ي', 'ك', 'ه', 'ة', 'ات', 'ان', 'ين', 'ون', 'وا']
+
+    words = text.split()
+    normalized_words = []
+    for word in words:
+        # Remove prefix
+        for p in prefixes:
+            if word.startswith(p) and len(word) > len(p) + 2:
+                word = word[len(p):]
+                break
+        # Remove suffix
+        for s in suffixes:
+            if word.endswith(s) and len(word) > len(s) + 2:
+                word = word[:-len(s)]
+                break
+        normalized_words.append(word)
+
+    return ' '.join(normalized_words)
+
+
 # Function to load data from JSON
 def load_data():
     try:

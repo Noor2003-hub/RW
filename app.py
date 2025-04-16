@@ -17,7 +17,7 @@ import json
 import base64
 from rapidfuzz import fuzz
 from cs50 import SQL
-from helpers import display_age, div, filter_data, is_english_letters,find_home,filter_category_by_age,create_age_ranges_structure,filter_by_age,calculate_age2,save_data,load_data,check_session
+from helpers import normalize_arabic, display_age, div, filter_data, is_english_letters,find_home,filter_category_by_age,create_age_ranges_structure,filter_by_age,calculate_age2,save_data,load_data,check_session
 import os
 import random
 import cs50
@@ -2069,6 +2069,9 @@ from flask import render_template, request
 from fuzzywuzzy import fuzz
 from itertools import permutations
 
+from itertools import permutations
+from fuzzywuzzy import fuzz
+
 @app.route("/search", methods=["GET", "POST"])
 def search():
     if request.method == "POST":
@@ -2076,27 +2079,37 @@ def search():
         selected_age = request.form.get("age", "")
         selected_category = request.form.get("category", "")
 
-        similarity_threshold = 70  # Define the minimum similarity score
+        similarity_threshold = 70
         results = []
 
-        # Split the query into words
         search_words = search_query.lower().split()
+        has_query = bool(search_words)
+        has_filters = bool(selected_age or selected_category)
 
         for category, items in data.items():
             for item in items:
                 performance_text = item["performance"].strip().lower()
-                max_similarity = 0
 
-                # Check all permutations of the query words to ensure all orders are checked for similarity
-                for perm in permutations(search_words):
-                    perm_text = " ".join(perm)
-                    similarity_score = fuzz.partial_ratio(perm_text, performance_text)
-                    max_similarity = max(max_similarity, similarity_score)# find maximum possible order of words
+                if has_query:
+                    max_similarity = 0
+                    normalized_query = normalize_arabic(" ".join(search_words))
 
-                # Check conditions for filtering results
-                if (max_similarity >= similarity_threshold) and \
-                   (not selected_age or selected_age in item.get("age", "")) and \
-                   (not selected_category or selected_category == category):
+                    for perm in permutations(search_words):
+                        normalized_performance = normalize_arabic(performance_text)
+                        similarity_score = fuzz.token_set_ratio(normalized_query, normalized_performance)
+                        max_similarity = max(max_similarity, similarity_score)
+
+                    print(max_similarity, performance_text)
+
+                else:
+                    max_similarity = 100  # No query means include all
+
+                # Check filters
+                age_match = not selected_age or selected_age in item.get("age", "")
+                category_match = not selected_category or selected_category == category
+
+                # Apply final conditions
+                if (not has_query or max_similarity >= similarity_threshold) and age_match and category_match:
                     results.append({
                         "category": category,
                         "title": item["title"],
@@ -2106,20 +2119,25 @@ def search():
                         "similarity_score": max_similarity
                     })
 
-        # Sort results by similarity score in descending order
-        results.sort(key=lambda x: x["similarity_score"], reverse=True)
+        # Sort results
+        if has_query:
+            results.sort(key=lambda x: x["similarity_score"], reverse=True)
+        else:
+            results.sort(key=lambda x: x["title"])  # Sort alphabetically if no query
 
-        # Handle case when no results are found
         if not results:
             results = 'لا يوجد نتائج'
 
-        return render_template("search.html", results=results, search_query=search_query,
-                               selected_age=selected_age, selected_category=selected_category, data=data)
+        return render_template("search.html", results=results,
+                               search_query=search_query,
+                               selected_age=selected_age,
+                               selected_category=selected_category,
+                               data=data)
 
     else:
-        # Render initial search page with no results
-        return render_template("search.html", results=[], search_query="", selected_age="", selected_category="",
-                               data=data)
+        return render_template("search.html", results=[], search_query="",
+                               selected_age="", selected_category="", data=data)
+
 @app.route("/setup", methods=["GET", "POST"])
 def setup():
     if request.method == "POST":

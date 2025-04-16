@@ -328,19 +328,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-<img src="/static/sticker.png" class="sticker-img">
+<!-- <img src="/static/sticker.png" class="sticker-img"> -->
 </body>
     <div class="content">
         <main class="container-fluid py-5 text-center">
             <div class="row justify-content-center">
-                <div class="col-md-8">
+                <div class="col-md-9">
                     <h1 class="mb-4" style="font-weight: bold;">مرحباً بكم في
 
                         <span style="color:#2a9d8f;">RiseWise</span></h1>
                     <table style="width: 100%" dir="rtl">
                         <tr>
                             <td style="width: 60%">
-                                <div class="content" align="right">
+                                <div class="content" style="padding-left:5%" align="right" >
                                     <h3 class="lead">
                                         <h2><strong> ما هو RiseWise؟</strong></h2>
                                         <strong>RiseWise</strong> التربية بحكمة هو تطبيق ويب مصمم خصيصًا لمساعدة الآباء
@@ -402,9 +402,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 .card {
-                    height: 200px;
-                    width: 200px;
-                    background-color: rgba(255, 255, 255, 0.6);
+                
+                    height: 190px;
+                    width: 330px;
+                    background-color: rgba(255, 255, 255, 1);
                     background-size: cover;
                     background-position: center;
                     border-radius: 10px;
@@ -425,7 +426,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     left: 0;
                     right: 0;
                     bottom: 0;
-                    background-color: rgba(255, 255, 255, 0.8);
+                    /* background-color: rgba(255, 255, 255, 0.8); */
                     z-index: 1;
                 }
 
@@ -439,9 +440,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     transform: translateY(-5px);
                 }
 
-                .card:nth-child(5), .card:nth-child(6), .card:nth-child(7) {
-                    width: 200px;
-                }
+                
                 .red-circle {
                     position: absolute;
                     top: 0;
@@ -461,7 +460,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     width: 90%;
                     height: 90%;
 
-                    object-fit: contain;
+                    /* object-fit: contain; */
                 }
                 .hh{
                     right:30px;
@@ -471,66 +470,76 @@ document.addEventListener('DOMContentLoaded', function () {
                 </style>
 
 
-                <div class="content" align="right">
+                <div class="content" align="center">
                     <h2><strong>هدفنا:</strong></h2>
 
-                    <div class="card-container" style="width:110%;">
+                    <div class="card-container" style="width:100%">
 
-                        <div class="card" style="background-image: url('/static/c1.png');">
+                        <!-- <div class="card" style="background-image: url('/static/c1.png');">
                             <div class="red-circle">
                                 <img src="/static/small-image1.png" alt="Small Image">
                             </div>
                             <h4 class="hh"><strong>توفير الطمأنينة للآباء:</strong></h4>
                             <p>من خلال توفير إرشادات واضحة ومنهجية لتعليم الأطفال المهارات الأساسية.</p>
 
-                        </div>
+                        </div> -->
 
-                        <div class="card" style="background-image: url('/static/c1.png');">
-                            <div class="red-circle">
-                                <img src="/static/small-image2.png" style="width:105%; height:105%; padding-top:10px;" alt="Small Image">
-                            </div><h4 class="hh"><strong>ضمان تغطية احتياجات الطفل بالكامل:</strong></h4>
+                        
+                        <div class="card" style="align-content: left;padding:2%;">
+                            <div style="display: flex; flex-direction: row; gap: 10px; direction: rtl; justify-content: flex-start; width: 100%;">
+                                <img src="/static/small-image2.png" style="object-fit: contain; height: 40px;" alt="Small Image">
+                                <h4 style="padding-top: 8px;"><strong>ضمان تغطية احتياجات الطفل بالكامل:</strong></h4>
+                            </div>
+                            
                             <p>تقديم خطط تطوير مخصصة بناءً على تقييم دقيق لمستوى تطور الطفل.</p>
                         </div>
-
-                        <div class="card" style="background-image: url('/static/c1.png');">
-                            <div class="red-circle">
-                                <img src="/static/small-image3.png" alt="Small Image">
+                        
+                        <div class="card" style="align-content: left;padding:2%;">
+                            <div style="display: flex; flex-direction: row; gap: 10px; direction: rtl; justify-content: flex-start; width: 100%;">
+                                <img src="/static/small-image3.png" style="object-fit: contain; height: 40px;" alt="Small Image">
+                                <h4 style="padding-top: 8px;"><strong>مراعاة ذوي الاحتياجات الخاصة:</strong></h4>
                             </div>
-                            <h4 class="hh"><strong>مراعاة ذوي الاحتياجات الخاصة:</strong></h4>
-                            <p>معاونة الأباء للأطفال ذوي الاحتياجات الخاصة.</p>
+                            
+                            <p>معاونة الأباء للأطفال ذوي الاحتياجات الخاصة خوض كل التحديات الممكنة في تربية ابنائهم.</p>
                         </div>
-
-                        <div class="card" style="background-image: url('/static/c1.png');">
-                            <div class="red-circle">
-                                <img src="/static/small-image4.png" alt="Small Image">
+                        
+                        <div class="card" style="align-content: left;padding:2%;">
+                            <div style="display: flex; flex-direction: row; gap: 10px; direction: rtl; justify-content: flex-start; width: 100%;">
+                                <img src="/static/small-image4.png" style="object-fit: contain; height: 40px;" alt="Small Image">
+                                <h4 style="padding-top: 8px;"><strong>اكتشاف الخلل لدى الطفل إن وجد:</strong></h4>
                             </div>
-                            <h4 class="hh"><strong>اكتشاف الخلل لدى الطفل إن وجد:</strong></h4>
+                            
                             <p>من خلال تحليل و مراقبة تطورات الطفل, من الممكن الكشف عن وجود معيق لنمو الطفل.</p>
                         </div>
-
-                        <div class="card" style="background-image: url('/static/c1.png');">
-                            <div class="red-circle">
-                                <img src="/static/small-image5.png" alt="Small Image">
+                       
+                        <div class="card" style="align-content: left;padding:2%;">
+                            <div style="display: flex; flex-direction: row; gap: 10px; direction: rtl; justify-content: flex-start; width: 100%;">
+                                <img src="/static/small-image5.png" style="object-fit: contain; height: 30px;" alt="Small Image">
+                                <h4 style="padding-top: 8px;"><strong>تسهيل التواصل مع الخبراء:</strong></h4>
                             </div>
-                            <h4 class="hh"><strong>تسهيل التواصل مع الخبراء:</strong></h4>
+                            
                             <p>تمكين الآباء من طلب الاستشارات والتوجيهات من المختصين من خلال التطبيق.</p>
                         </div>
-
-                        <div class="card" style="background-image: url('/static/c1.png');">
-                            <div class="red-circle">
-                                <img src="/static/small-image6.png" style="width:150%; height:150%; padding-top:10px; padding-right: 4px;"  alt="Small Image">
+                        
+                        <div class="card" style="align-content: left;padding:2%;">
+                            <div style="display: flex; flex-direction: row; gap: 10px; direction: rtl; justify-content: flex-start; width: 100%;">
+                                <img src="/static/small-image6.png" style="object-fit: contain; height: 40px;" alt="Small Image">
+                                <h4 style="padding-top: 8px;"><strong>تحسين الدعم الأسري وفهم احتياجات الطفل:</strong></h4>
                             </div>
-                            <h4 class="hh"  style="width:80%"><strong>تحسين الدعم الأسري وفهم احتياجات الطفل:</strong></h4>
+                            
                             <p>مساعدة العائلات على التفاعل بشكل أفضل بناءً على فهم الطفل في كل مرحلة من مراحل نموه.</p>
                         </div>
-
-                        <div class="card" style="background-image: url('/static/c1.png');">
-                            <div class="red-circle">
-                                <img src="/static/small-image7.png" alt="Small Image">
+                        <div class="card" style="align-content: left;padding:2%;">
+                            <div style="display: flex; flex-direction: row; gap: 10px; direction: rtl; justify-content: flex-start; width: 100%;">
+                                <img src="/static/small-image7.png" style="object-fit: contain; height: 40px;" alt="Small Image">
+                                <h4 style="padding-top: 8px;"><strong>الوصول إلى الجميع:</strong></h4>
                             </div>
-                            <h4 class="hh"  style="padding-bottom: 10px"><strong>الوصول إلى الجميع:</strong></h4>
+                            
                             <p>جعل التطبيق متاحًا لأي شخص يسعى لتعليم الأطفال ، سواء كانوا آباءً، مقدمي رعاية، معلمين، أو متخصصين.</p>
                         </div>
+                        
+
+                        
                     </div>
                 </div>
 
@@ -540,21 +549,203 @@ document.addEventListener('DOMContentLoaded', function () {
                 </div>
 
                 <br>
-                <div style="background-color: #f9f9f9; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); padding: 30px; width:60%; margin: auto; border-radius: 15px; ">
-                    <h2 style="text-align: center; background-color:#2a9d8f; line-height: 2; margin-bottom: 20px;"><strong>احصل الآن على خطة شاملة لتطوير طفلك 👇</strong></h2>
-                    <ul style="list-style-type: none; padding: 0; text-align: right; line-height: 1.8;">
-                        <li style="margin-bottom: 15px;"><h4 style="color: #333;">✔ خطة مخصصة لطفلك في جميع الجوانب: المساعدة الذاتية - الإدراك - الحركة - اللغة - المخالطة الاجتماعية</h4></li>
-                        <li style="margin-bottom: 15px;"><h4 style="color: #333;">✔ متابعة تطور الطفل</h4></li>
-                        <li style="margin-bottom: 15px;"><h4 style="color: #333;">✔ مخطط بياني يوضح تطور الطفل على مدار الوقت</h4></li>
-                        <li style="margin-bottom: 15px;"><h4 style="color: #333;">✔ استشارات تربوية من الاختصاصين</h4></li>
-                        <li style="margin-bottom: 15px;"><h4 style="color: #333;">✔ مجاني</h4></li>
-                    </ul>
-                    <div style="text-align: center; margin-top: 30px;">
-                        <a href="{{ url_for('register') }}" style="text-decoration: none;">
-                            <button class="btn btn-primary" style="background-color: #2a9d8f; border: none; padding: 15px 30px; border-radius: 50px; font-size: 18px; font-family: 'Cairo', sans-serif;">إنشاء حساب</button>
-                        </a>
-                    </div>
+                <!-- Section Wrapper -->
+<!-- Horizontal Scroll Container -->
+<div style="background-color: #f9f9f9; padding: 50px 0; margin-top:50px; ">
+    <h2 style="text-align: center; background-color: #2a9d8f; padding: 15px 25px; border-radius: 12px; color: white; width: fit-content; margin: auto; margin-bottom: 30px;">
+        احصل الآن على خطة شاملة لتطوير طفلك 👇
+    </h2>
+    <div class="scroll-wrapper">
+        <style>
+            .scroll-wrapper {
+                width: 205vh;
+                overflow: hidden;
+                position: relative;
+                cursor: grab;
+            }
+        
+            .scroll-container {
+                width: 100%;
+                overflow: hidden;
+                position: relative;
+                -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+                scrollbar-width: none;     /* Hide scrollbar for Firefox */
+            }
+        
+            .scroll-container::-webkit-scrollbar {
+                display: none;  /* Hide scrollbar for Chrome, Safari and Opera */
+            }
+        
+            .scroll-content {
+                display: flex;
+                gap: 20px;
+                animation: scroll 40s linear infinite;
+                width: 100%;
+                user-select: none; /* Prevent text selection while dragging */
+            }
+        
+            .scroll-content:hover {
+                animation-play-state: paused;
+            }
+        
+            .s-card {
+                flex: 0 0 600px;
+                min-width: 600px;
+                max-width: 600px;
+                height: 450px;
+                background-color: white;
+                border-radius: 15px;
+                box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+                padding: 20px;
+                text-align: center;
+                transition: transform 0.3s ease;
+            }
+        
+            .s-card:hover {
+                transform: translateY(-5px);
+            }
+        
+            .s-card img {
+                width: 550px;
+                height: 300px;
+                object-fit: cover;
+                margin-bottom: 15px;
+            }
+        
+            .s-card h4 {
+                color: #333;
+                font-size: 28px;
+                margin: 0;
+                padding: 10px 0;
+            }
+        
+            .s-card p {
+                font-size: 24px;
+                color: #666;
+                margin: 10px 0 0 0;
+            }
+        
+            @keyframes scroll {
+                0% {
+                    transform: translateX(105%);
+                }
+                
+                90% {
+                    transform: translateX(-10%);
+                }
+                
+                100% {
+                    transform: translateX(105%);
+                }
+            }
+        
+            .scroll-content::after {
+                content: "";
+                display: block;
+                width: 100%;
+                height: 1px;
+            }
+        </style>
+        <div class="scroll-container">
+            <div class="scroll-content">
+                <div class="s-card">
+                    <img src="/static/scroll5.png" alt="تأحر">
+                    <h4>✔ اكتشف ما يعيق نمو طفلك</h4>
                 </div>
+                <div class="s-card">
+                    <img src="/static/scroll4.png" alt="استشارات">
+                    <h4>✔ استشارات تربوية من المختصين</h4>
+                </div>
+                <div class="s-card">
+                    <img src="/static/scroll3.jpg" alt="مخطط">
+                    <h4>✔ مخطط بياني لتطور الطفل</h4>
+                </div>
+                <div class="s-card">
+                    <img src="/static/scroll2.jpg" alt="تتبع">
+                    <h4>✔ متابعة تطور الطفل</h4>
+                </div>
+                <div class="s-card">
+                    <img src="/static/scroll1.jpg" alt="خطة مخصصة">
+                    <h4>✔ خطة مخصصة لطفلك</h4>
+                </div>
+
+                
+
+                
+
+                
+
+                
+            </div>
+        </div>
+    </div>
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const scrollContainer = document.querySelector('.scroll-container');
+    const scrollContent = document.querySelector('.scroll-content');
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+
+    // Mouse events for desktop
+    scrollContainer.addEventListener('mousedown', (e) => {
+        isDown = true;
+        scrollContainer.style.cursor = 'grabbing';
+        startX = e.pageX - scrollContainer.offsetLeft;
+        scrollLeft = scrollContainer.scrollLeft;
+    });
+
+    scrollContainer.addEventListener('mouseleave', () => {
+        isDown = false;
+        scrollContainer.style.cursor = 'grab';
+    });
+
+    scrollContainer.addEventListener('mouseup', () => {
+        isDown = false;
+        scrollContainer.style.cursor = 'grab';
+    });
+
+    scrollContainer.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - scrollContainer.offsetLeft;
+        const walk = (x - startX) * 2; // Adjust scrolling speed
+        scrollContainer.scrollLeft = scrollLeft - walk;
+    });
+
+    // Touch events for mobile
+    scrollContainer.addEventListener('touchstart', (e) => {
+        isDown = true;
+        startX = e.touches[0].pageX - scrollContainer.offsetLeft;
+        scrollLeft = scrollContainer.scrollLeft;
+    });
+
+    scrollContainer.addEventListener('touchend', () => {
+        isDown = false;
+    });
+
+    scrollContainer.addEventListener('touchmove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.touches[0].pageX - scrollContainer.offsetLeft;
+        const walk = (x - startX) * 2;
+        scrollContainer.scrollLeft = scrollLeft - walk;
+    });
+});
+</script>
+
+      
+    <div style="text-align: center; display: block; margin-top: 30px;">
+        <a href="{{ url_for('register') }}">
+            <button style="background-color: #2a9d8f; color: white; border: none; padding: 15px 40px; font-size: 18px; border-radius: 50px; cursor: pointer; font-family: 'Cairo', sans-serif;">
+                إنشاء حساب
+            </button>
+        </a>
+</div>
+
     </main></div>
     <!-- Footer -->
     <footer class="mb-5 small text-center text-muted">

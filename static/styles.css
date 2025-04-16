@@ -343,11 +343,12 @@ input.largerCheckbox {
     border-color:black;
 }
 .card {
-    min-width: 200px; /* Adjust based on your card size */
+    min-width: 300px; /* Adjust based on your card size */
     margin-right: 20px;
     padding: 10px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     align-items: center;
+    padding:2%;
 }
 .card2:hover {
     background-color: #9ce1d9;

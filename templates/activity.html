@@ -6,6 +6,11 @@
 
 {% block main %}
 <style>
+    .selected-category {
+    transform: scale(1.2);
+    border: 3px solid #000;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    }
     .modal-content {
     background-size: cover;
     background-position: center;
@@ -84,27 +89,27 @@
 <div style="display: flex; justify-content: center; gap: 10px;">
     <form method="get" action="/activity">
         <input type="hidden" name="age_range" value="{{ age_range }}">
-        <button style='background-color: #B32E31' class="btn2" name="category" value="اللغة" type="submit"><h2>🗣</h2></button>
+        <button style='font-size: 2rem; background-color: #B32E31' class="btn2 {% if category == 'اللغة' %}selected-category{% endif %}"  name="category" value="اللغة" type="submit">🗣</button>
         <p>اللغة</p>
     </form>
     <form method="get" action="/activity">
         <input type="hidden" name="age_range" value="{{ age_range }}">
-        <button style='background-color: #FAD052' class="btn2" name="category" value="الإدراك" type="submit"><h2>🧠</h2></button>
+        <button style='font-size: 2rem; background-color: #FAD052' class="btn2 {% if category == 'الإدراك' %}selected-category{% endif %}" name="category" value="الإدراك" type="submit">🧠</button>
         <p>الإدراك</p>
     </form>
     <form method="get" action="/activity">
         <input type="hidden" name="age_range" value="{{ age_range }}">
-        <button style='background-color: #7CB84B' class="btn2" name="category" value="الحركة" type="submit"><h2>🏃‍♂️</h2></button>
+        <button style='font-size: 2rem; background-color: #7CB84B' class="btn2 {% if category == 'الحركة' %}selected-category{% endif %}" name="category" value="الحركة" type="submit">🏃‍♂️</button>
         <p>الحركة</p>
     </form>
     <form method="get" action="/activity">
         <input type="hidden" name="age_range" value="{{ age_range }}">
-        <button style='background-color: #84A5D9' class="btn2" name="category" value="المساعدة الذاتية" type="submit"><h2>🍴</h2></button>
+        <button style='font-size: 2rem; background-color: #84A5D9' class="btn2 {% if category == 'المساعدة الذاتية' %}selected-category{% endif %}" name="category" value="المساعدة الذاتية" type="submit">🍴</button>
         <p>المساعدة<br> الذاتية</p>
     </form>
     <form method="get" action="/activity">
         <input type="hidden" name="age_range" value="{{ age_range }}">
-        <button style='background-color: #9F67C7' class="btn2" name="category" value="المخالطة الاجتماعية" type="submit"><h2>👥</h2></button>
+        <button style='font-size: 2rem; background-color: #9F67C7' class="btn2 {% if category == 'المخالطة الاجتماعية' %}selected-category{% endif %}" name="category" value="المخالطة الاجتماعية" type="submit">👥</button>
         <p>المخالطة<br> الاجتماعية</p>
     </form>
 </div>

@@ -1,10 +1,12 @@
-{% if session['user_type'] == 'p'%}
+{% if session['user_type'] == 'a'%}
 
-{% extends "layout.html" %}
+{% extends "layout3.html" %}
 {% elif session['user_type'] == 's' %}
 {% extends "layout2.html" %}
+
+
 {% else%}
-{% extends "layout3.html" %}
+{% extends "layout.html" %}
 {%endif%}
 {% block title %}
     Homepage
